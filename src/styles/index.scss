@@ -1,0 +1,350 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: lightgrey;
+  margin: 0;
+}
+
+nav {
+  color: white;
+  background-color: #513ec6;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5%;
+
+  a {
+    color: white;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    img {
+      width: 5rem;
+    }
+    h1 {
+      font-size: 2rem;
+      padding-top: 10px;
+    }
+  }
+
+  ul {
+    display: flex;
+    align-items: center;
+    .show {
+      color: black;
+      background-color: white;
+    }
+    li {
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 50px;
+      list-style-type: none;
+      font-size: 2rem;
+      padding: 10px;
+      margin: 0 15px;
+      transition: all 0.2s ease-in-out;
+      &:hover {
+        color: black;
+        background-color: white;
+      }
+    }
+  }
+}
+
+div.controller {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  .input-field {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 15px;
+    flex: 1 1;
+    label {
+      font-size: 1.25rem;
+      margin: 0 15px;
+    }
+    input {
+      font-size: 1.25rem;
+      border: none;
+      border-radius: 35px;
+      text-align: center;
+      width: 20%;
+      &:focus {
+        animation: color-changed ease-in-out 10s infinite forwards;
+      }
+    }
+    //讓google & safari的input箭頭隱藏
+    input::-webkit-inner-spin-button,
+    input::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+
+    button {
+      margin-left: 15px;
+    }
+  }
+  h2 {
+    flex: 2 1 30px;
+    font-size: 2rem;
+    padding-right: 30px;
+  }
+  .btn-field {
+    display: flex;
+    justify-content: center;
+    flex: 1 1;
+  }
+}
+
+div.voc-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  ul {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    li {
+      background: linear-gradient(to bottom right, #ffff77, rgb(245, 174, 61));
+      border: 3px solid white;
+      box-shadow: 5px 2px 6px 3px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      width: 20%;
+      margin: 2.5%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      svg {
+        cursor: pointer;
+        color: darkblue;
+        font-size: 1.25rem;
+        padding: 10px;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+      }
+      h2 {
+        margin: 1rem;
+      }
+      h3 {
+        margin: 0;
+      }
+      div.action {
+        margin: 1rem;
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+.btn {
+  padding: 10px 20px;
+  margin: 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.remember {
+  &:hover {
+    background-color: limegreen;
+  }
+}
+.notRemember {
+  &:hover {
+    background-color: #ff5511;
+  }
+}
+.changeVoc {
+  transition: all 2s ease;
+  &:hover {
+    transform: scale(1.1);
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: white;
+    background-color: rgb(106, 106, 106);
+  }
+}
+
+.notification {
+  font-size: 2rem;
+  border: white solid 5px;
+  border-radius: 15px;
+  background-color: bisque;
+  width: 45%;
+  margin: 3rem 0;
+  p {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.dialog {
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 40%;
+  background: sienna;
+  padding-left: 30px;
+  p {
+    font-size: 1.5rem;
+  }
+  .actions {
+    display: flex;
+    justify-content: end;
+    button {
+      margin: 0 10px;
+    }
+  }
+}
+
+div.hint {
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-align: center;
+  background: #e63f00;
+  border-radius: 10px;
+  width: 15%;
+  height: 20vh;
+  position: absolute;
+  right: 30px;
+  top: 10vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: jumpingUp ease 0.3s 1 normal forwards;
+  p {
+    margin: 10px 0;
+  }
+  progress {
+    width: 80%;
+  }
+}
+
+.dictionary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0 3rem 0;
+  position: relative;
+  .input-field {
+    input {
+      font-size: 3rem;
+      border-radius: 30px;
+      outline: none;
+      padding: 5px 20px;
+    }
+    svg {
+      cursor: pointer;
+      font-size: 3rem;
+      margin: 0 1rem;
+      transform: rotate(5deg);
+      transition: animation 2s ease;
+      &:hover {
+        animation: swing 2s infinite ease-in-out;
+      }
+    }
+  }
+  .foundResult {
+    background-color: burlywood;
+    border-radius: 15px;
+    margin: 50px;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    padding: 20px 0;
+    span {
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 0 15px;
+      color: orangered;
+    }
+    h2 {
+      padding: 0 15px;
+    }
+  }
+
+  .repeat-hint {
+    padding: 15px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    background: #e63f00;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 30px;
+    animation: jumpingDown ease 0.5s 1 normal forwards;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: white;
+    background-color: rgb(106, 106, 106);
+  }
+}
+
+@keyframes jumpingDown {
+  from {
+    bottom: 30px;
+  }
+  to {
+    bottom: 10px;
+  }
+}
+
+@keyframes jumpingUp {
+  from {
+    top: 15vh;
+  }
+  to {
+    top: 10vh;
+  }
+}
+
+@keyframes swing {
+  0% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes color-changed {
+  0% {
+    outline: crimson 2px solid;
+  }
+  25% {
+    outline: yellow 2px solid;
+  }
+  50% {
+    outline: greenyellow 2px solid;
+  }
+  75% {
+    outline: darkblue 2px solid;
+  }
+  100% {
+    outline: blueviolet 2px solid;
+  }
+}
