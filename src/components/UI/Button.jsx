@@ -1,12 +1,12 @@
 import React from "react";
 
-const Button = ({ btnName, remember, notRemember, change, ...props }) => {
+const Button = ({ btnName, bgGreen, bgRed, change, ...props }) => {
   let cssClass = "btn";
-  if (remember) {
-    cssClass += " remember";
-  } else if (notRemember) {
-    cssClass += " notRemember";
-  } else {
+  if (bgGreen) {
+    cssClass += " bg-green";
+  } else if (bgRed) {
+    cssClass += " bg-red";
+  } else if (change) {
     cssClass += " changeVoc";
   }
 

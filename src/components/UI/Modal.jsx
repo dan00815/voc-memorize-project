@@ -1,4 +1,5 @@
 import React, { forwardRef } from "react";
+import Button from "./Button";
 import { createPortal } from "react-dom";
 
 const Modal = forwardRef(({ vocData, definition, sentence }, ref) => {
@@ -14,8 +15,8 @@ const Modal = forwardRef(({ vocData, definition, sentence }, ref) => {
       <p>定義 : {definition}</p>
       <p>例句: {sentence}</p>
       <div className="actions">
-        <button>收藏按鈕</button>
-        <button onClick={closeModalHandler}>關閉</button>
+        <Button btnName="收藏" />
+        <Button onClick={closeModalHandler} bgRed btnName="關閉" />
       </div>
     </dialog>,
     document.querySelector("#modal")

@@ -53,11 +53,11 @@ const Controller = () => {
           type="number"
           max={20}
           min={1}
-          // onChange={vocAmountHandler}
         >
           <button onClick={vocAmountHandler}>送出</button>
         </Input>
       </div>
+
       <h2 style={{ textAlign: "center" }}>VOC</h2>
       <div className="btn-field">
         <Button btnName="換一批" change onClick={updatedNewVoc} />

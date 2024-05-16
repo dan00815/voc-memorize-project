@@ -10,6 +10,7 @@ const Nav = () => {
   const show = useSelector((state) => state.dictionary.show);
 
   function resetDictionary() {
+    window.scrollTo(0, 0);
     dispatch(dictiActions.resetDictionary());
   }
 
@@ -23,7 +24,7 @@ const Nav = () => {
 
   return (
     <nav>
-      <Link to="/">
+      <Link to="/" onClick={resetDictionary}>
         <img src={logo} alt="logo" />
         <h1>VOC MEMORIZE</h1>
       </Link>

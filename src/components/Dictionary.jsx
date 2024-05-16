@@ -28,9 +28,12 @@ const Dictionary = () => {
 
       //拿定義
       const defineRes = await axios.get(
-        `https://api.wordnik.com/v4/word.json/${keyword}/definitions?limit=3&includeRelated=false&sourceDictionaries=ahd-5&useCanonical=false&includeTags=false&api_key=${process.env.REACT_APP_WORDNIK_API}`
+        `https://api.wordnik.com/v4/word.json/${keyword}/definitions?limit=3&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=${process.env.REACT_APP_WORDNIK_API}`
       );
-      const define = defineRes.data[0].text;
+      const define =
+        defineRes.data[0].text ||
+        defineRes.data[1].text ||
+        defineRes.data[2].text;
 
       //定義的中文
       const defineChiRes = await axios.get(`${translateUrl}&q=${define}`);

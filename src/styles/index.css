@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -14,6 +15,10 @@ nav {
   display: flex;
   justify-content: space-between;
   padding: 0 5%;
+  box-shadow: 0px 3px 15px 3px rgb(128, 128, 128);
+  position: sticky;
+  top: 0px;
+  z-index: 5;
 }
 nav a {
   color: white;
@@ -149,11 +154,11 @@ div.voc-container ul li div.action {
   transition: all 0.3s ease;
 }
 
-.remember:hover {
+.bg-green:hover {
   background-color: limegreen;
 }
 
-.notRemember:hover {
+.bg-red:hover {
   background-color: #ff5511;
 }
 
@@ -208,9 +213,10 @@ div.hint {
   border-radius: 10px;
   width: 15%;
   height: 20vh;
-  position: absolute;
+  position: fixed;
   right: 30px;
   top: 10vh;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -274,9 +280,20 @@ div.hint progress {
   border-radius: 10px;
   display: flex;
   align-items: center;
-  position: absolute;
+  position: fixed;
   right: 30px;
   animation: jumpingDown ease 0.5s 1 normal forwards;
+}
+
+div.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+div.error h1 {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 0;
 }
 
 @keyframes scaleUp {
@@ -293,10 +310,10 @@ div.hint progress {
 }
 @keyframes jumpingDown {
   from {
-    bottom: 30px;
+    bottom: 50px;
   }
   to {
-    bottom: 10px;
+    bottom: 20px;
   }
 }
 @keyframes jumpingUp {

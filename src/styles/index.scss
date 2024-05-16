@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -14,7 +15,10 @@ nav {
   display: flex;
   justify-content: space-between;
   padding: 0 5%;
-
+  box-shadow: 0px 3px 15px 3px rgb(128, 128, 128, 1);
+  position: sticky;
+  top: 0px;
+  z-index: 5;
   a {
     color: white;
     display: flex;
@@ -153,12 +157,12 @@ div.voc-container {
   transition: all 0.3s ease;
 }
 
-.remember {
+.bg-green {
   &:hover {
     background-color: limegreen;
   }
 }
-.notRemember {
+.bg-red {
   &:hover {
     background-color: #ff5511;
   }
@@ -214,9 +218,10 @@ div.hint {
   border-radius: 10px;
   width: 15%;
   height: 20vh;
-  position: absolute;
+  position: fixed;
   right: 30px;
   top: 10vh;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -282,9 +287,20 @@ div.hint {
     border-radius: 10px;
     display: flex;
     align-items: center;
-    position: absolute;
+    position: fixed;
     right: 30px;
     animation: jumpingDown ease 0.5s 1 normal forwards;
+  }
+}
+
+div.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  h1 {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 0;
   }
 }
 
@@ -303,10 +319,10 @@ div.hint {
 
 @keyframes jumpingDown {
   from {
-    bottom: 30px;
+    bottom: 50px;
   }
   to {
-    bottom: 10px;
+    bottom: 20px;
   }
 }
 

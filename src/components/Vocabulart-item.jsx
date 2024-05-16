@@ -5,14 +5,14 @@ import Modal from "./UI/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { vocActions } from "../store/voc-slice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 const VocabulartItem = ({ eng, chi, index }) => {
   const [isClickable, setIsClickable] = useState(true);
   const dialogRef = useRef();
   const dispatch = useDispatch();
-  const wordnik_definition_URL = `https://api.wordnik.com/v4/word.json/${eng}/definitions?limit=3&includeRelated=false&sourceDictionaries=ahd-5&useCanonical=false&includeTags=false&api_key=${process.env.REACT_APP_WORDNIK_API}`;
+  const wordnik_definition_URL = `https://api.wordnik.com/v4/word.json/${eng}/definitions?limit=3&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=${process.env.REACT_APP_WORDNIK_API}`;
   const wordnik_example_URL = `https://api.wordnik.com/v4/word.json/${eng}/topExample?useCanonical=false&api_key=${process.env.REACT_APP_WORDNIK_API}`;
 
   const vocDefinition = useSelector((state) => state.voc.vocDetail.definition);
@@ -37,7 +37,10 @@ const VocabulartItem = ({ eng, chi, index }) => {
     if (e.target.tagName === "svg" || e.target.tagName === "path") {
       try {
         const definition = await axios.get(wordnik_definition_URL);
-        const definitionResult = await definition.data[0].text;
+        const definitionResult =
+          definition.data[0].text ||
+          definition.data[1].text ||
+          definition.data[2].text;
 
         const exampleSentence = await axios.get(wordnik_example_URL);
         const exampleSentenceResult = await exampleSentence.data.text;
@@ -63,8 +66,8 @@ const VocabulartItem = ({ eng, chi, index }) => {
         <h2>{eng}</h2>
         <h3>{chi}</h3>
         <div className="action">
-          <Button btnName="Got it" remember onClick={rememberClickHandler} />
-          <Button btnName="Store" notRemember />
+          <Button btnName="Got it" bgGreen onClick={rememberClickHandler} />
+          <Button btnName="Store" bgRed />
         </div>
       </li>
 
