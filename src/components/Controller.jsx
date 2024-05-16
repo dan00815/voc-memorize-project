@@ -13,6 +13,7 @@ const Controller = () => {
   const inputRef = useRef();
   const dispatch = useDispatch();
   const error = useSelector((state) => state.ui.error);
+  const vocAmount = useSelector((state) => state.voc.vocAmount);
 
   function updatedNewVoc() {
     dispatch(vocActions.changeNewVoc());
@@ -25,18 +26,15 @@ const Controller = () => {
       dispatch(
         uiActions.showError({ status: "error", msg: "Only Accept 1 ~ 20" })
       );
-
       //error訊息1.5秒後消失，非同步函式不能直接寫在redux裡
       setTimeout(() => {
         dispatch(uiActions.clearError());
       }, 1500);
-
-      return;
+    } else if (inputRef.current.value === vocAmount) {
+      dispatch(vocActions.changeNewVoc());
     } else {
       dispatch(vocActions.changeAmount(inputRef.current.value));
     }
-
-    dispatch(vocActions.changeNewVoc());
   }
 
   return (

@@ -24,6 +24,8 @@ const Vocabulary = () => {
   useEffect(() => {
     async function fetchData() {
       try {
+        dispatch(vocActions.resetVoc());
+
         dispatch(
           uiActions.showNotification({
             status: "sending",

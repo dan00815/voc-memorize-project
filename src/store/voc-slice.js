@@ -34,8 +34,6 @@ const vocSlice = createSlice({
 
     changeAmount(state, action) {
       state.vocAmount = action.payload;
-      state.voc.eng = [];
-      state.voc.chi = [];
     },
 
     updateDefinition(state, action) {
@@ -47,15 +45,18 @@ const vocSlice = createSlice({
     },
 
     changeNewVoc(state) {
-      state.voc.eng = [];
-      state.voc.chi = [];
       state.vocChange = !state.vocChange;
     },
 
     updateDetail(state, action) {
-      //期望我的action.payload是一個物件
+      //action.payload是一個物件
       state.vocDetail.definition = action.payload.definition;
       state.vocDetail.sentence = action.payload.sentence;
+    },
+
+    resetVoc(state) {
+      state.voc.eng = [];
+      state.voc.chi = [];
     },
   },
 });

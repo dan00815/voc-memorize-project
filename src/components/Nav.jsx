@@ -9,7 +9,7 @@ const Nav = () => {
   const dispatch = useDispatch();
   const show = useSelector((state) => state.dictionary.show);
 
-  function reset() {
+  function resetDictionary() {
     dispatch(dictiActions.resetDictionary());
   }
 
@@ -23,7 +23,7 @@ const Nav = () => {
 
   return (
     <nav>
-      <Link to="/" onClick={reset}>
+      <Link to="/">
         <img src={logo} alt="logo" />
         <h1>VOC MEMORIZE</h1>
       </Link>
@@ -32,7 +32,7 @@ const Nav = () => {
         <li onClick={showDictionaryHandler} className={showClas}>
           Dictionary
         </li>
-        <Link to="/box" onClick={reset}>
+        <Link to="/box" onClick={resetDictionary}>
           <li>BOX</li>
         </Link>
       </ul>
