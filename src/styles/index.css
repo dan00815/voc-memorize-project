@@ -153,6 +153,9 @@ div.voc-container ul li div.action {
   cursor: pointer;
   transition: all 0.3s ease;
 }
+.btn:hover {
+  color: white;
+}
 
 .bg-green:hover {
   background-color: limegreen;
@@ -163,13 +166,12 @@ div.voc-container ul li div.action {
 }
 
 .changeVoc {
-  transition: all 2s ease;
+  transition: all 0.8s ease;
 }
 .changeVoc:hover {
   transform: scale(1.1);
   font-size: 1.25rem;
   font-weight: bold;
-  color: white;
   background-color: rgb(106, 106, 106);
 }
 
@@ -192,7 +194,16 @@ div.voc-container ul li div.action {
   border-radius: 8px;
   width: 40%;
   background: sienna;
-  padding-left: 30px;
+  padding: 10px 30px;
+}
+.dialog .header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.dialog .header h1 {
+  font-size: 2rem;
+  margin-right: 20px;
 }
 .dialog p {
   font-size: 1.5rem;
@@ -203,6 +214,16 @@ div.voc-container ul li div.action {
 }
 .dialog .actions button {
   margin: 0 10px;
+}
+
+.audio {
+  cursor: pointer;
+  padding-top: 5px;
+  font-size: 1.75rem;
+}
+.audio .audio-effect {
+  transition: all 0.3s ease-in-out;
+  color: dodgerblue;
 }
 
 div.hint {

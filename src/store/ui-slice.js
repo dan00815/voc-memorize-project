@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   notification: null,
-  error: null,
-  repeatError: null,
+  error: { amountError: null, repeatError: null, audioError: null },
   progressBar: 1500,
+  audio: false,
 };
 
 const ulSlice = createSlice({
@@ -17,22 +17,28 @@ const ulSlice = createSlice({
       };
     },
 
-    showError(state, action) {
-      state.error = {
-        status: action.payload.status,
-        message: action.payload.msg,
-      };
+    showAmountError(state, action) {
+      state.error.amountError = action.payload;
     },
 
-    clearError(state) {
-      state.error = null;
+    clearAmountError(state) {
+      state.error.amountError = null;
     },
 
     showRepeatError(state, action) {
-      state.repeatError = action.payload;
+      state.error.repeatError = action.payload;
     },
+
     clearRepeatError(state) {
-      state.repeatError = null;
+      state.error.repeatError = null;
+    },
+
+    showAudioError(state, action) {
+      state.error.audioError = action.payload;
+    },
+
+    clearAudioError(state) {
+      state.error.audioError = null;
     },
 
     ProgressEvent(state) {
@@ -42,9 +48,15 @@ const ulSlice = createSlice({
     recoverProgress(state) {
       state.progressBar = 1500;
     },
+
+    openAudio(state) {
+      state.audio = true;
+    },
+    closeAudio(state) {
+      state.audio = false;
+    },
   },
 });
-//1500
 
 export const uiActions = ulSlice.actions;
 export default ulSlice;

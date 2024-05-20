@@ -155,6 +155,9 @@ div.voc-container {
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
+  &:hover {
+    color: white;
+  }
 }
 
 .bg-green {
@@ -168,12 +171,11 @@ div.voc-container {
   }
 }
 .changeVoc {
-  transition: all 2s ease;
+  transition: all 0.8s ease;
   &:hover {
     transform: scale(1.1);
     font-size: 1.25rem;
     font-weight: bold;
-    color: white;
     background-color: rgb(106, 106, 106);
   }
 }
@@ -197,7 +199,16 @@ div.voc-container {
   border-radius: 8px;
   width: 40%;
   background: sienna;
-  padding-left: 30px;
+  padding: 10px 30px;
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    h1 {
+      font-size: 2rem;
+      margin-right: 20px;
+    }
+  }
   p {
     font-size: 1.5rem;
   }
@@ -207,6 +218,16 @@ div.voc-container {
     button {
       margin: 0 10px;
     }
+  }
+}
+
+.audio {
+  cursor: pointer;
+  padding-top: 5px;
+  font-size: 1.75rem;
+  .audio-effect {
+    transition: all 0.3s ease-in-out;
+    color: dodgerblue;
   }
 }
 

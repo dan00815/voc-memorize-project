@@ -12,7 +12,7 @@ import { uiActions } from "../store/ui-slice";
 const Controller = () => {
   const inputRef = useRef();
   const dispatch = useDispatch();
-  const error = useSelector((state) => state.ui.error);
+  const amountError = useSelector((state) => state.ui.error.amountError);
   const vocAmount = useSelector((state) => state.voc.vocAmount);
 
   function updatedNewVoc() {
@@ -23,12 +23,10 @@ const Controller = () => {
     e.preventDefault();
 
     if (inputRef.current.value > 20 || inputRef.current.value < 1) {
-      dispatch(
-        uiActions.showError({ status: "error", msg: "Only Accept 1 ~ 20" })
-      );
+      dispatch(uiActions.showAmountError("Only Accept 1 ~ 20"));
       //error訊息1.5秒後消失，非同步函式不能直接寫在redux裡
       setTimeout(() => {
-        dispatch(uiActions.clearError());
+        dispatch(uiActions.clearAmountError());
       }, 1500);
     } else if (inputRef.current.value === vocAmount) {
       dispatch(vocActions.changeNewVoc());
@@ -39,9 +37,9 @@ const Controller = () => {
 
   return (
     <div className="controller">
-      {error && (
+      {amountError && (
         <Hint
-          message={error.message}
+          message={amountError}
           icon={<FontAwesomeIcon icon={faCircleInfo} />}
         />
       )}
