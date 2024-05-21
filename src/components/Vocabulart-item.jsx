@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "./UI/Button";
 import Modal from "./UI/Modal";
 
@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
-const VocabulartItem = ({ eng, chi, index }) => {
+const VocabulartItem = ({ eng, chi, store }) => {
   const [isClickable, setIsClickable] = useState(true);
   const dialogRef = useRef();
   const dispatch = useDispatch();
@@ -17,6 +17,14 @@ const VocabulartItem = ({ eng, chi, index }) => {
 
   const vocDefinition = useSelector((state) => state.voc.vocDetail.definition);
   const vocSentence = useSelector((state) => state.voc.vocDetail.sentence);
+  const vocStorage = useSelector((state) => state.voc.vocStorage);
+
+  useEffect(() => {
+    fetch(
+      "https://vocabulary-project-422108-default-rtdb.asia-southeast1.firebasedatabase.app/voc.json",
+      { method: "PUT", body: JSON.stringify(vocStorage) }
+    );
+  }, [vocStorage]);
 
   function rememberClickHandler() {
     if (!isClickable) return;
@@ -59,14 +67,18 @@ const VocabulartItem = ({ eng, chi, index }) => {
     }
   }
 
+  function storeVoc() {
+    dispatch(vocActions.store(eng));
+  }
+
   return (
     <>
-      <li onClick={clickHandler}>
+      <li onClick={clickHandler} className="voc-item">
         <FontAwesomeIcon icon={faBookOpen} />
         <h2>{eng}</h2>
         <div className="action">
           <Button btnName="Got it" bgGreen onClick={rememberClickHandler} />
-          <Button btnName="Store" bgRed />
+          {store && <Button btnName="Store" bgRed onClick={storeVoc} />}
         </div>
       </li>
 

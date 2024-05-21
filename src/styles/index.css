@@ -112,7 +112,8 @@ div.voc-container ul {
   flex-wrap: wrap;
   padding-left: 0;
 }
-div.voc-container ul li {
+
+.voc-item {
   background: linear-gradient(to bottom right, #ffff77, rgb(245, 174, 61));
   border: 3px solid white;
   box-shadow: 5px 2px 6px 3px rgba(0, 0, 0, 0.2);
@@ -125,7 +126,7 @@ div.voc-container ul li {
   justify-content: center;
   position: relative;
 }
-div.voc-container ul li svg {
+.voc-item svg {
   cursor: pointer;
   color: darkblue;
   font-size: 1.25rem;
@@ -134,14 +135,40 @@ div.voc-container ul li svg {
   top: 12px;
   right: 5px;
 }
-div.voc-container ul li h2 {
+.voc-item h2 {
   padding-top: 8px;
   margin: 15px;
 }
-div.voc-container ul li div.action {
+.voc-item div.action {
   padding: 12px;
   display: flex;
   justify-content: center;
+}
+
+ul.voc-item-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+}
+ul.voc-item-container .voc-item {
+  display: flex;
+  flex-direction: row;
+  width: 25%;
+  margin-left: 5%;
+}
+ul.voc-item-container .voc-item h2 {
+  flex: 4 1 30px;
+  padding: 0;
+  text-align: center;
+}
+ul.voc-item-container .voc-item div.action {
+  flex: 2 1 30px;
+  padding: 0;
+  margin-right: 60px;
+}
+ul.voc-item-container .voc-item svg {
+  top: 10px;
 }
 
 .btn {

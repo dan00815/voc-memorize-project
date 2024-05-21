@@ -7,6 +7,7 @@ const initialState = {
   vocDefinition: "",
   vocSentence: "",
   vocDetail: { definition: "", sentence: "" },
+  vocStorage: [],
 };
 
 const vocSlice = createSlice({
@@ -57,6 +58,15 @@ const vocSlice = createSlice({
     resetVoc(state) {
       state.voc.eng = [];
       state.voc.chi = [];
+    },
+
+    store(state, action) {
+      const newVocArray = [...state.vocStorage, action.payload];
+      state.vocStorage = newVocArray;
+    },
+
+    replaceVoc(state, action) {
+      state.vocStorage = action.payload || [];
     },
   },
 });

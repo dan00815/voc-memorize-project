@@ -109,10 +109,7 @@ const Vocabulary = () => {
                   index={index}
                   eng={vocItem}
                   chi={TRANSLATE_VOC_DATA[index]}
-                  VocObj={{
-                    eng: VOC_DATA[index],
-                    chi: TRANSLATE_VOC_DATA[index],
-                  }}
+                  store
                 />
               );
             })}

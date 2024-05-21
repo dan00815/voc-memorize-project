@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 const Nav = () => {
   const dispatch = useDispatch();
   const show = useSelector((state) => state.dictionary.show);
+  const vocFromFirebase = useSelector((state) => state.voc.vocStorage);
 
   function resetDictionary() {
     window.scrollTo(0, 0);
@@ -34,7 +35,7 @@ const Nav = () => {
           Dictionary
         </li>
         <Link to="/box" onClick={resetDictionary}>
-          <li>BOX</li>
+          <li>BOX({vocFromFirebase.length})</li>
         </Link>
       </ul>
     </nav>
