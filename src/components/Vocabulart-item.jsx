@@ -64,7 +64,6 @@ const VocabulartItem = ({ eng, chi, index }) => {
       <li onClick={clickHandler}>
         <FontAwesomeIcon icon={faBookOpen} />
         <h2>{eng}</h2>
-        <h3>{chi}</h3>
         <div className="action">
           <Button btnName="Got it" bgGreen onClick={rememberClickHandler} />
           <Button btnName="Store" bgRed />

@@ -131,17 +131,15 @@ div.voc-container ul li svg {
   font-size: 1.25rem;
   padding: 10px;
   position: absolute;
-  top: 5px;
+  top: 12px;
   right: 5px;
 }
 div.voc-container ul li h2 {
-  margin: 1rem;
-}
-div.voc-container ul li h3 {
-  margin: 0;
+  padding-top: 8px;
+  margin: 15px;
 }
 div.voc-container ul li div.action {
-  margin: 1rem;
+  padding: 12px;
   display: flex;
   justify-content: center;
 }
