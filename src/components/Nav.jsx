@@ -5,10 +5,17 @@ import { useDispatch } from "react-redux";
 import { dictiActions } from "../store/dictionary-slice";
 import { useSelector } from "react-redux";
 
+import Hint from "./Hint";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+
 const Nav = () => {
   const dispatch = useDispatch();
   const show = useSelector((state) => state.dictionary.show);
   const vocFromFirebase = useSelector((state) => state.voc.vocStorage);
+  const onHomePage = useSelector((state) => state.voc.voc.onHomePage);
+  const vocRemove = useSelector((state) => state.voc.vocRemove);
+  const isClickable = useSelector((state) => state.voc.isClickable);
 
   function resetDictionary() {
     window.scrollTo(0, 0);
@@ -18,9 +25,14 @@ const Nav = () => {
   function showDictionaryHandler() {
     dispatch(dictiActions.showDictionary());
   }
-  let showClas = "";
+
+  let showClass = "";
+  let showBox = "";
   if (show) {
-    showClas = "show";
+    showClass = "show";
+  }
+  if (!onHomePage) {
+    showBox = "show";
   }
 
   return (
@@ -30,12 +42,19 @@ const Nav = () => {
         <h1>VOC MEMORIZE</h1>
       </Link>
 
+      {isClickable && (
+        <Hint
+          message={vocRemove ? "Good ! Keep Going" : "Put Into Box !"}
+          icon={<FontAwesomeIcon icon={faCircleCheck} />}
+        />
+      )}
+
       <ul>
-        <li onClick={showDictionaryHandler} className={showClas}>
+        <li onClick={showDictionaryHandler} className={showClass}>
           Dictionary
         </li>
         <Link to="/box" onClick={resetDictionary}>
-          <li>BOX({vocFromFirebase.length})</li>
+          <li className={showBox}>BOX({vocFromFirebase.length})</li>
         </Link>
       </ul>
     </nav>

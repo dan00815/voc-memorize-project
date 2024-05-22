@@ -21,7 +21,7 @@ function App() {
         }
 
         const data = await res.json();
-        console.log(data);
+        console.log(data); //[{},{}]
         dispatch(vocActions.replaceVoc(data));
       } catch (error) {
         console.log("抓資料錯誤");

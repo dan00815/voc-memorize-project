@@ -2,8 +2,11 @@ import React, { forwardRef } from "react";
 import { createPortal } from "react-dom";
 import Button from "./Button";
 import Audio from "../Audio";
+import { useSelector } from "react-redux";
 
-const Modal = forwardRef(({ vocData, definition, sentence }, ref) => {
+const Modal = forwardRef(({ vocData, definition, sentence, storeFn }, ref) => {
+  const onHomePage = useSelector((state) => state.voc.voc.onHomePage);
+
   function closeModalHandler() {
     ref.current.close();
   }
@@ -20,8 +23,17 @@ const Modal = forwardRef(({ vocData, definition, sentence }, ref) => {
       <p>定義 : {definition}</p>
       <p>例句: {sentence}</p>
       <div className="actions">
-        <Button btnName="Store" />
-        <Button onClick={closeModalHandler} bgRed btnName="Close" />
+        {onHomePage && (
+          <Button
+            btnName="Store"
+            bgStore
+            onClick={() => {
+              storeFn();
+              closeModalHandler();
+            }}
+          />
+        )}
+        <Button onClick={closeModalHandler} bgClose btnName="Close" />
       </div>
     </dialog>,
     document.querySelector("#modal")

@@ -31,6 +31,11 @@ const Audio = ({ word }) => {
         setTimeout(() => {
           dispatch(uiActions.clearAudioError());
         }, 1000);
+      } else {
+        dispatch(uiActions.showAudioError("Too much click"));
+        setTimeout(() => {
+          dispatch(uiActions.clearAudioError());
+        }, 1000);
       }
     }
   }

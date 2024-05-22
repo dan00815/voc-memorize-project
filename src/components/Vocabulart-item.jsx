@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "./UI/Button";
 import Modal from "./UI/Modal";
 
@@ -9,15 +9,15 @@ import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
 const VocabulartItem = ({ eng, chi, store }) => {
-  const [isClickable, setIsClickable] = useState(true);
   const dialogRef = useRef();
   const dispatch = useDispatch();
   const wordnik_definition_URL = `https://api.wordnik.com/v4/word.json/${eng}/definitions?limit=3&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=${process.env.REACT_APP_WORDNIK_API}`;
   const wordnik_example_URL = `https://api.wordnik.com/v4/word.json/${eng}/topExample?useCanonical=false&api_key=${process.env.REACT_APP_WORDNIK_API}`;
 
-  const vocDefinition = useSelector((state) => state.voc.vocDetail.definition);
-  const vocSentence = useSelector((state) => state.voc.vocDetail.sentence);
+  const vocDetail = useSelector((state) => state.voc.vocDetail);
   const vocStorage = useSelector((state) => state.voc.vocStorage);
+  const isClickable = useSelector((state) => state.voc.isClickable);
+  const onHomePage = useSelector((state) => state.voc.voc.onHomePage);
 
   useEffect(() => {
     fetch(
@@ -27,31 +27,35 @@ const VocabulartItem = ({ eng, chi, store }) => {
   }, [vocStorage]);
 
   function rememberClickHandler() {
-    if (!isClickable) return;
+    if (isClickable) return;
+    else {
+      dispatch(vocActions.removeVocFromList({ eng, chi }));
 
-    dispatch(vocActions.removeVocFromList({ eng, chi }));
-
-    setIsClickable(false);
-
-    if (isClickable) {
       setTimeout(() => {
-        dispatch(vocActions.vocRemoveRecover());
-        setIsClickable(true);
+        dispatch(vocActions.recoverClickable());
       }, 1500);
     }
   }
 
-  async function clickHandler(e) {
+  function storeVoc() {
+    if (isClickable) return;
+    else {
+      dispatch(vocActions.store({ eng, chi }));
+
+      setTimeout(() => {
+        dispatch(vocActions.recoverClickable());
+      }, 1500);
+    }
+  }
+
+  async function openDetail(e) {
     if (e.target.tagName === "svg" || e.target.tagName === "path") {
       try {
         const definition = await axios.get(wordnik_definition_URL);
-        const definitionResult =
-          definition.data[0].text ||
-          definition.data[1].text ||
-          definition.data[2].text;
+        const definitionResult = definition.data[0].text;
 
         const exampleSentence = await axios.get(wordnik_example_URL);
-        const exampleSentenceResult = await exampleSentence.data.text;
+        const exampleSentenceResult = exampleSentence.data.text;
 
         dispatch(
           vocActions.updateDetail({
@@ -60,33 +64,30 @@ const VocabulartItem = ({ eng, chi, store }) => {
           })
         );
       } catch (error) {
-        console.log(error);
+        console.log(error.message);
       }
 
       dialogRef.current.showModal();
-    }
-  }
-
-  function storeVoc() {
-    dispatch(vocActions.store(eng));
+    } else return;
   }
 
   return (
     <>
-      <li onClick={clickHandler} className="voc-item">
+      <li onClick={openDetail} className="voc-item">
         <FontAwesomeIcon icon={faBookOpen} />
         <h2>{eng}</h2>
         <div className="action">
-          <Button btnName="Got it" bgGreen onClick={rememberClickHandler} />
-          {store && <Button btnName="Store" bgRed onClick={storeVoc} />}
+          <Button btnName="Got it" bgRemember onClick={rememberClickHandler} />
+          {onHomePage && <Button btnName="Store" bgStore onClick={storeVoc} />}
         </div>
       </li>
 
       <Modal
         ref={dialogRef}
         vocData={{ eng, chi }}
-        definition={vocDefinition ? vocDefinition : "not support"}
-        sentence={vocSentence ? vocSentence : "not support"}
+        definition={vocDetail.definition ?? "not support"}
+        sentence={vocDetail.sentence ?? "not support"}
+        storeFn={storeVoc}
       />
     </>
   );

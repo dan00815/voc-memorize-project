@@ -52,7 +52,7 @@ const Controller = () => {
           max={20}
           min={1}
         >
-          <button onClick={vocAmountHandler}>送出</button>
+          <Button btnName="送出" change onClick={vocAmountHandler} />
         </Input>
       </div>
 

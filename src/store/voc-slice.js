@@ -1,13 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  voc: { eng: [], chi: [] }, //{eng:["eng","eng"] , chi :["中文","中文"]}
+  voc: { eng: [], chi: [], onHomePage: false },
   vocRemove: false,
+  isClickable: false,
   vocAmount: 8,
   vocChange: false,
-  vocDefinition: "",
-  vocSentence: "",
   vocDetail: { definition: "", sentence: "" },
-  vocStorage: [],
+  vocStorage: [], //voc: [{eng:"",chi:"中文"} , {eng:"",chi:"中文"}, {eng:"",chi:"中文"}]
 };
 
 const vocSlice = createSlice({
@@ -15,21 +14,45 @@ const vocSlice = createSlice({
   initialState,
   reducers: {
     updateVoc(state, action) {
+      state.voc.onHomePage = true;
       state.voc.eng = action.payload.eng;
       state.voc.chi = action.payload.chi;
     },
 
-    removeVocFromList(state, action) {
-      const selectedWord = action.payload; //預期會是點到的那個單字資訊，VocObj ={eng:"eng",chi:"單字"}
-
-      state.voc.eng = state.voc.eng.filter((voc) => voc !== selectedWord.eng);
-      state.voc.chi = state.voc.chi.filter((voc) => voc !== selectedWord.chi);
-
-      //有改變
-      state.vocRemove = true;
+    changeToBox(state) {
+      state.voc.onHomePage = false;
     },
 
-    vocRemoveRecover(state) {
+    removeVocFromList(state, action) {
+      const selectedWord = action.payload;
+      state.isClickable = true;
+      state.vocRemove = true;
+
+      if (state.voc.onHomePage) {
+        state.voc.eng = state.voc.eng.filter((voc) => voc !== selectedWord.eng);
+        state.voc.chi = state.voc.chi.filter((voc) => voc !== selectedWord.chi);
+      } else {
+        state.vocStorage = state.vocStorage.filter(
+          (voc) => voc.eng !== selectedWord.eng
+        );
+      }
+    },
+
+    store(state, action) {
+      const selectedWord = action.payload;
+      state.isClickable = true;
+
+      //存到firebase
+      const newVocArray = [...state.vocStorage, selectedWord];
+      state.vocStorage = newVocArray;
+
+      //從HomePage的地方消除
+      state.voc.eng = state.voc.eng.filter((voc) => voc !== selectedWord.eng);
+      state.voc.chi = state.voc.chi.filter((voc) => voc !== selectedWord.chi);
+    },
+
+    recoverClickable(state) {
+      state.isClickable = false;
       state.vocRemove = false;
     },
 
@@ -37,20 +60,11 @@ const vocSlice = createSlice({
       state.vocAmount = action.payload;
     },
 
-    updateDefinition(state, action) {
-      state.vocDefinition = action.payload;
-    },
-
-    updateSentence(state, action) {
-      state.vocSentence = action.payload;
-    },
-
     changeNewVoc(state) {
       state.vocChange = !state.vocChange;
     },
 
     updateDetail(state, action) {
-      //action.payload是一個物件
       state.vocDetail.definition = action.payload.definition;
       state.vocDetail.sentence = action.payload.sentence;
     },
@@ -58,11 +72,6 @@ const vocSlice = createSlice({
     resetVoc(state) {
       state.voc.eng = [];
       state.voc.chi = [];
-    },
-
-    store(state, action) {
-      const newVocArray = [...state.vocStorage, action.payload];
-      state.vocStorage = newVocArray;
     },
 
     replaceVoc(state, action) {
