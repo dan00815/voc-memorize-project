@@ -21,6 +21,9 @@ const Box = () => {
             return <VocabulartItem key={index} eng={voc.eng} chi={voc.chi} />;
           })}
         </ul>
+        {vocFromFirebase.length === 0 && (
+          <h1>There are no vocabulary in the Box !!!</h1>
+        )}
       </div>
       <Dictionary />
     </>

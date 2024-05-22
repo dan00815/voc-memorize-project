@@ -148,31 +148,6 @@ div.voc-container {
   }
 }
 
-ul.voc-item-container {
-  display: flex;
-  flex-wrap: wrap;
-  padding-left: 0;
-  .voc-item {
-    display: flex;
-    flex-direction: row;
-    width: 25%;
-    margin-left: 5%;
-    h2 {
-      flex: 4 1 30px;
-      padding: 0;
-      text-align: center;
-    }
-    div.action {
-      flex: 2 1 30px;
-      padding: 0;
-      margin-right: 60px;
-    }
-    svg {
-      top: 10px;
-    }
-  }
-}
-
 .btn {
   padding: 10px 20px;
   margin: 12px;
@@ -354,6 +329,36 @@ div.error {
 }
 
 div.box {
+  ul.voc-item-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    .voc-item {
+      display: flex;
+      flex-direction: row;
+      width: 25%;
+      margin-left: 5%;
+      h2 {
+        flex: 4 1 30px;
+        padding: 0;
+        text-align: center;
+      }
+      div.action {
+        flex: 2 1 30px;
+        padding: 0;
+        margin-right: 60px;
+      }
+      svg {
+        top: 10px;
+      }
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin: 5rem;
+    text-align: center;
+  }
 }
 
 @keyframes scaleUp {
