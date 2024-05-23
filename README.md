@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+# VOC-memorize 單字記憶工具
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+使用 React 及 Redux toolkit 打造的單字記憶工具，並連結 Firebase 實行單字儲存庫的功能，藉由串接 wordnik API 取得隨機推播單字及定義、例句等，google translate API 進行翻譯功能
 
-## Available Scripts
+[DEMO website](https://voc-memorize-project.onrender.com/)
 
-In the project directory, you can run:
+## 專案功能
 
-### `npm start`
+- 隨機推播單字
+- 可調整推播單字的數量，並可更換新的一批單字
+- 單字右上角書本圖示點選可看到定義、例句、及發音
+- 已熟記的單字點選消除
+- 未記得者點選後可收入儲存庫
+- 字典功能可做查詢(包含中文翻譯、定義、例句、發音)
+- BOX 單字儲存庫收集未熟記的單字，可重複背誦直到記憶後可消除
+- Error 訊息及點選提示
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 專案畫面
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+![screen1](https://github.com/dan00815/voc-memorize-project/blob/main/public/screenshot/screen1.jpg)
 
-### `npm test`
+![screen2](https://github.com/dan00815/voc-memorize-project/blob/main/public/screenshot/screen2.jpg)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![screen3](https://github.com/dan00815/voc-memorize-project/blob/main/public/screenshot/screen3.jpg)
 
-### `npm run build`
+![screen4](https://github.com/dan00815/voc-memorize-project/blob/main/public/screenshot/screen4.jpg)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![screen5](https://github.com/dan00815/voc-memorize-project/blob/main/public/screenshot/screen5.jpg)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![screen6](https://github.com/dan00815/voc-memorize-project/blob/main/public/screenshot/screen6.jpg)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 元件拆分
 
-### `npm run eject`
+1. 主頁部分，將上方控制單字數量的元件獨立，其內部在拆分「VocAmountController」及「ChangeVocBtn」兩個元件方便各自管理不同功能
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. 將重用性高的元件，拆分在 UI folder，提升開發效率
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 本地端安裝
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. 打開 terminal，將專案複製到本機電腦
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+git clone https://github.com/dan00815/voc-memorize-project.git
+```
 
-## Learn More
+2. 進到專案資料夾
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+cd voc-memorize
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. 安裝相關套件
 
-### Code Splitting
+```
+npm install
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. 別忘記配置環境變數
 
-### Analyzing the Bundle Size
+```
+在.env.example檔案中查看如何配置環境變數
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+5. 啟動伺服器
 
-### Making a Progressive Web App
+```
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+現在可以在瀏覽器中輸入 http://localhost:3000 開始使用應用程式

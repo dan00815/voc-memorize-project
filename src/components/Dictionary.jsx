@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { translateUrl } from "../asset/url";
 import axios from "axios";
 import Input from "./UI/Input";
-import Audio from "./Audio";
+import Audio from "./UI/Audio";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 

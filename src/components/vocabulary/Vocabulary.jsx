@@ -3,12 +3,12 @@ import axios from "axios";
 
 import VocabulartItem from "./Vocabulart-item";
 import Controller from "./Controller";
-import Notification from "./UI/Notification";
-import { wordnik_URL, translateUrl } from "../asset/url";
+import Notification from "../UI/Notification";
+import { wordnik_URL, translateUrl } from "../../asset/url";
 
 import { useSelector, useDispatch } from "react-redux";
-import { uiActions } from "../store/ui-slice";
-import { vocActions } from "../store/voc-slice";
+import { uiActions } from "../../store/ui-slice";
+import { vocActions } from "../../store/voc-slice";
 
 const Vocabulary = () => {
   const dispatch = useDispatch();

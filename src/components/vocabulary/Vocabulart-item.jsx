@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import Button from "./UI/Button";
-import Modal from "./UI/Modal";
+import Button from "../UI/Button";
+import Modal from "../Modal";
 
 import { useDispatch, useSelector } from "react-redux";
-import { vocActions } from "../store/voc-slice";
+import { vocActions } from "../../store/voc-slice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";

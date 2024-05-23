@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Dictionary from "./Dictionary";
-import VocabulartItem from "./Vocabulart-item";
+import VocabulartItem from "./vocabulary/Vocabulart-item";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { vocActions } from "../store/voc-slice";

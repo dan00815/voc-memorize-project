@@ -3,7 +3,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { uiActions } from "../store/ui-slice";
+import { uiActions } from "../../store/ui-slice";
 
 const Audio = ({ word }) => {
   const dispatch = useDispatch();

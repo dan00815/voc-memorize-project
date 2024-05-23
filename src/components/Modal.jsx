@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import { createPortal } from "react-dom";
-import Button from "./Button";
-import Audio from "../Audio";
+import Button from "./UI/Button";
+import Audio from "./UI/Audio";
 import { useSelector } from "react-redux";
 
 const Modal = forwardRef(({ vocData, definition, sentence, storeFn }, ref) => {
