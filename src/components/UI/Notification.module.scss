@@ -1,0 +1,28 @@
+.notification {
+  text-align: center;
+  font-size: 2rem;
+  border: white solid 5px;
+  border-radius: 15px;
+  background-color: bisque;
+  width: 45%;
+  margin: 5rem 0;
+  padding: 1.5rem;
+  p {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .notification {
+    font-size: 1.25rem;
+    width: 70%;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 1024px) {
+  .notification {
+    width: 70%;
+  }
+}

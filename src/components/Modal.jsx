@@ -1,4 +1,5 @@
 import React, { forwardRef } from "react";
+import classes from "./Modal.module.scss";
 import { createPortal } from "react-dom";
 import Button from "./UI/Button";
 import Audio from "./UI/Audio";
@@ -12,8 +13,8 @@ const Modal = forwardRef(({ vocData, definition, sentence, storeFn }, ref) => {
   }
 
   return createPortal(
-    <dialog ref={ref} className="dialog">
-      <div className="header">
+    <dialog ref={ref} className={classes.dialog}>
+      <div className={classes.header}>
         <h1>
           {vocData.eng} {vocData.chi}
         </h1>
@@ -22,7 +23,8 @@ const Modal = forwardRef(({ vocData, definition, sentence, storeFn }, ref) => {
 
       <p>定義 : {definition}</p>
       <p>例句: {sentence}</p>
-      <div className="actions">
+
+      <div className={classes.actions}>
         {onHomePage && (
           <Button
             btnName="Store"

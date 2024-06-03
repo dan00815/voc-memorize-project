@@ -1,19 +1,27 @@
 import React from "react";
+import classes from "./Button.module.scss";
 
-const Button = ({ btnName, bgRemember, bgStore, bgClose, change, ...props }) => {
-  let cssClass = "btn";
+const Button = ({
+  btnName,
+  bgRemember,
+  bgStore,
+  bgClose,
+  change,
+  ...props
+}) => {
+  let cssClass = classes.btn;
   switch (true) {
     case bgRemember:
-      cssClass += " bg-remember";
+      cssClass += ` ${classes.bgRemember}`;
       break;
     case bgStore:
-      cssClass += " bg-stroe";
+      cssClass += ` ${classes.bgStore}`;
       break;
     case bgClose:
-      cssClass += " bg-close";
+      cssClass += ` ${classes.bgClose}`;
       break;
     case change:
-      cssClass += " changeVoc";
+      cssClass += ` ${classes.changeVoc}`;
       break;
     default:
       break;

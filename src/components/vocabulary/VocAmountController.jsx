@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import classes from "./Controller.module.scss";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 
@@ -10,11 +11,15 @@ const VocAmountController = () => {
   const dispatch = useDispatch();
   const inputRef = useRef();
   const vocAmount = useSelector((state) => state.voc.vocAmount);
+  const isClickable = useSelector((state) => state.ui.isClickable);
+  const isChangeable = useSelector((state) => state.voc.isChangeable);
 
   function vocAmountHandler(e) {
     e.preventDefault();
 
-    if (inputRef.current.value > 20 || inputRef.current.value < 1) {
+    if (isClickable | isChangeable) {
+      return;
+    } else if (inputRef.current.value > 20 || inputRef.current.value < 1) {
       dispatch(uiActions.showAmountError("Only Accept 1 ~ 20"));
       //error訊息1.5秒後消失，非同步函式不能直接寫在redux裡
       setTimeout(() => {
@@ -28,7 +33,7 @@ const VocAmountController = () => {
   }
 
   return (
-    <div className="input-field">
+    <div className={classes["input-field"]}>
       <Input ref={inputRef} labelName="單字數量" type="number" max={20} min={1}>
         <Button btnName="送出" change onClick={vocAmountHandler} />
       </Input>

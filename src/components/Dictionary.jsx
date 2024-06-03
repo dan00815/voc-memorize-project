@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import classes from "./Dictionary.module.scss";
 import { translateUrl } from "../asset/url";
 import axios from "axios";
 import Input from "./UI/Input";
@@ -101,17 +102,17 @@ const Dictionary = () => {
   return (
     <>
       {dictionaryShow && (
-        <div className="dictionary">
+        <div className={classes.dictionary}>
           <h1>Dictionary</h1>
-          <div className="input-field">
+          <div className={classes["input-field"]}>
             <Input type="text" ref={inputRef} />
             <FontAwesomeIcon icon={faMagnifyingGlass} onClick={clickHandler} />
           </div>
 
           {hasResult && (
-            <div className="foundResult">
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <h2>中文翻譯 : {dictionaryWord.chi}</h2>
+            <div className={classes.foundResult}>
+              <div className={classes.resultContainer}>
+                <h2>中文翻譯：{dictionaryWord.chi}</h2>
                 <Audio word={inputRef.current.value} />
               </div>
 
@@ -126,9 +127,12 @@ const Dictionary = () => {
               )}
             </div>
           )}
-          {error && <h1>找不到搜尋結果</h1>}
 
-          {repeatError && <div className="repeat-hint">{repeatError}</div>}
+          {error && <h2>找不到搜尋結果</h2>}
+
+          {repeatError && (
+            <div className={classes["repeat-hint"]}>{repeatError}</div>
+          )}
         </div>
       )}
     </>

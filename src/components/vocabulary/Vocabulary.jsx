@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
+import classes from "./Vocabulary.module.scss";
 import axios from "axios";
 
-import VocabulartItem from "./Vocabulart-item";
+import VocabulartItem from "./Vocabulary-item";
 import Controller from "./Controller";
 import Notification from "../UI/Notification";
 import { wordnik_URL, translateUrl } from "../../asset/url";
@@ -78,7 +79,7 @@ const Vocabulary = () => {
     <div>
       <Controller />
 
-      <div className="voc-container">
+      <div className={classes.vocContainer}>
         {notification && (
           <Notification
             title={notification.title}

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import classes from "./Vocabulary-item.module.scss";
 import Button from "../UI/Button";
 import Modal from "../Modal";
 
@@ -73,10 +74,13 @@ const VocabulartItem = ({ eng, chi, store }) => {
 
   return (
     <>
-      <li onClick={openDetail} className="voc-item">
+      <li
+        onClick={openDetail}
+        className={onHomePage ? classes.vocItem : classes["box-vocItem"]}
+      >
         <FontAwesomeIcon icon={faBookOpen} />
         <h2>{eng}</h2>
-        <div className="action">
+        <div className={classes.action}>
           <Button btnName="Got it" bgRemember onClick={rememberClickHandler} />
           {onHomePage && <Button btnName="Store" bgStore onClick={storeVoc} />}
         </div>

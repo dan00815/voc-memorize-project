@@ -5,6 +5,7 @@ const initialState = {
   isClickable: false,
   vocAmount: 8,
   vocChange: false,
+  isChangeable: false,
   vocDetail: { definition: "", sentence: "" },
   vocStorage: [], //voc: [{eng:"",chi:"中文"} , {eng:"",chi:"中文"}, {eng:"",chi:"中文"}]
 };
@@ -14,10 +15,13 @@ const vocSlice = createSlice({
   initialState,
   reducers: {
     updateVoc(state, action) {
-      state.voc.onHomePage = true;
       state.voc.eng = action.payload.eng;
       state.voc.chi = action.payload.chi;
+
+      state.isChangeable = false;
     },
+
+    changeToHome(state) {},
 
     changeToBox(state) {
       state.voc.onHomePage = false;
@@ -58,10 +62,12 @@ const vocSlice = createSlice({
 
     changeAmount(state, action) {
       state.vocAmount = action.payload;
+      state.isChangeable = true;
     },
 
     changeNewVoc(state) {
       state.vocChange = !state.vocChange;
+      state.isChangeable = true;
     },
 
     updateDetail(state, action) {
@@ -70,6 +76,7 @@ const vocSlice = createSlice({
     },
 
     resetVoc(state) {
+      state.voc.onHomePage = true;
       state.voc.eng = [];
       state.voc.chi = [];
     },

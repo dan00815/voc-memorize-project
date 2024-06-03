@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   notification: null,
   error: { amountError: null, repeatError: null, audioError: null },
+  isClickable: false,
   progressBar: 1500,
   audio: false,
 };
@@ -18,10 +19,12 @@ const ulSlice = createSlice({
     },
 
     showAmountError(state, action) {
+      state.isClickable = true;
       state.error.amountError = action.payload;
     },
 
     clearAmountError(state) {
+      state.isClickable = false;
       state.error.amountError = null;
     },
 

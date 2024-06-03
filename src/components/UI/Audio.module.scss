@@ -1,0 +1,23 @@
+.audio {
+  cursor: pointer;
+  padding-top: 15px;
+  font-size: 2rem;
+}
+.audio-effect {
+  transition: all 0.3s ease-in-out;
+  color: dodgerblue;
+}
+
+.audioError {
+  padding-top: 20px;
+  margin-left: 15px;
+  color: red;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 576px) {
+  .audio {
+    padding-top: 12px;
+    font-size: 1rem;
+  }
+}

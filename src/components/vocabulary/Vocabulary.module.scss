@@ -1,0 +1,11 @@
+.vocContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  ul {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+  }
+}

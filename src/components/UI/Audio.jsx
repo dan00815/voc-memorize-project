@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import classes from "./Audio.module.scss";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
@@ -42,26 +43,16 @@ const Audio = ({ word }) => {
 
   return (
     <>
-      <div className="audio">
+      <div className={classes.audio}>
         <FontAwesomeIcon
           icon={faVolumeHigh}
           onClick={fetchAudioData}
-          className={audio ? "audio-effect" : ""}
+          className={audio ? classes["audio-effect"] : undefined}
         />
         <audio src="" ref={audioRef}></audio>
       </div>
-      {audioError && (
-        <span
-          style={{
-            paddingTop: "5px",
-            marginLeft: "15px",
-            color: "black",
-            fontSize: "1.05rem",
-          }}
-        >
-          {audioError}
-        </span>
-      )}
+
+      {audioError && <h3 className={classes.audioError}>{audioError}</h3>}
     </>
   );
 };

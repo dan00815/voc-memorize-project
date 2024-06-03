@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
+import classes from "./Box.module.scss";
 import Dictionary from "./Dictionary";
-import VocabulartItem from "./vocabulary/Vocabulart-item";
+import VocabulartItem from "./vocabulary/Vocabulary-item";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { vocActions } from "../store/voc-slice";
@@ -15,8 +16,8 @@ const Box = () => {
 
   return (
     <>
-      <div className="box">
-        <ul className="voc-item-container">
+      <div className={classes.box}>
+        <ul>
           {vocFromFirebase.map((voc, index) => {
             return <VocabulartItem key={index} eng={voc.eng} chi={voc.chi} />;
           })}
