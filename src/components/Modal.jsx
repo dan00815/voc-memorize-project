@@ -5,8 +5,9 @@ import Button from "./UI/Button";
 import Audio from "./UI/Audio";
 import { useSelector } from "react-redux";
 
-const Modal = forwardRef(({ vocData, definition, sentence, storeFn }, ref) => {
-  const onHomePage = useSelector((state) => state.voc.voc.onHomePage);
+const Modal = forwardRef(({ vocData, storeFn }, ref) => {
+  const onHomePage = useSelector((state) => state.voc.UIstate.onHomePage);
+  const vocDetail = useSelector((state) => state.voc.vocDetail);
 
   function closeModalHandler() {
     ref.current.close();
@@ -21,8 +22,8 @@ const Modal = forwardRef(({ vocData, definition, sentence, storeFn }, ref) => {
         <Audio word={vocData.eng} />
       </div>
 
-      <p>定義 : {definition}</p>
-      <p>例句: {sentence}</p>
+      <p>定義 : {vocDetail.definition ?? "not support"}</p>
+      <p>例句: {vocDetail.sentence ?? "not support"}</p>
 
       <div className={classes.actions}>
         {onHomePage && (

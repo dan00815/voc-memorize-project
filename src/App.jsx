@@ -1,8 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout";
-import Homepage from "./components/Homepage";
-import Box from "./components/Box";
-import Error from "./components/Error";
+import Layout from "./page/Layout";
+import Homepage from "./page/Homepage";
+import BoxPage from "./page/BoxPage";
+import Login from "./page/Login";
+import Register from "./page/Register";
+import Error from "./page/Error";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { vocActions } from "./store/voc-slice";
@@ -36,7 +38,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Homepage />}></Route>
-            <Route path="/box" element={<Box />}></Route>
+            <Route path="/box" element={<BoxPage />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/register" element={<Register />}></Route>
             <Route path="*" element={<Error />}></Route>
           </Route>
         </Routes>

@@ -10,9 +10,9 @@ import { vocActions } from "../../store/voc-slice";
 const VocAmountController = () => {
   const dispatch = useDispatch();
   const inputRef = useRef();
-  const vocAmount = useSelector((state) => state.voc.vocAmount);
+  const vocAmount = useSelector((state) => state.voc.voc.vocAmount);
   const isClickable = useSelector((state) => state.ui.isClickable);
-  const isChangeable = useSelector((state) => state.voc.isChangeable);
+  const isChangeable = useSelector((state) => state.voc.UIstate.isChangeable);
 
   function vocAmountHandler(e) {
     e.preventDefault();

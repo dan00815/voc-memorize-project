@@ -15,7 +15,7 @@ const Vocabulary = () => {
   const dispatch = useDispatch();
   const notification = useSelector((state) => state.ui.notification);
   const VOC_DATA = useSelector((state) => state.voc.voc);
-  const vocAmount = useSelector((state) => state.voc.vocAmount);
+  const vocAmount = useSelector((state) => state.voc.voc.vocAmount);
   const vocChange = useSelector((state) => state.voc.vocChange);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const Vocabulary = () => {
         )}
 
         <ul>
-          {VOC_DATA.eng &&
+          {VOC_DATA &&
             VOC_DATA.eng.map((vocItem, index) => {
               return (
                 <VocabulartItem

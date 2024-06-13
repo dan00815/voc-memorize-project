@@ -1,6 +1,6 @@
 import React from "react";
-import Vocabulary from "./vocabulary/Vocabulary";
-import Dictionary from "./Dictionary";
+import Vocabulary from "../components/vocabulary/Vocabulary";
+import Dictionary from "../components/Dictionary";
 
 const Homepage = () => {
   return (

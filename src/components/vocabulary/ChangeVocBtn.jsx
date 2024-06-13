@@ -6,7 +6,8 @@ import { vocActions } from "../../store/voc-slice";
 
 const ChangeVocBtn = () => {
   const dispatch = useDispatch();
-  const isChangeable = useSelector((state) => state.voc.isChangeable);
+  const isChangeable = useSelector((state) => state.voc.UIstate.isChangeable);
+  
 
   function updatedNewVoc() {
     if (isChangeable) {

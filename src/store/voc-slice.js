@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  voc: { eng: [], chi: [], onHomePage: false },
-  vocRemove: false,
-  isClickable: false,
-  vocAmount: 8,
-  vocChange: false,
-  isChangeable: false,
+  voc: { eng: [], chi: [], vocAmount: 8 },
   vocDetail: { definition: "", sentence: "" },
-  vocStorage: [], //voc: [{eng:"",chi:"中文"} , {eng:"",chi:"中文"}, {eng:"",chi:"中文"}]
+  UIstate: {
+    onHomePage: false,
+    vocRemove: false,
+    isClickable: false,
+    isChangeable: false,
+  },
+  vocChange: false,
+  vocStorage: [],
 };
 
 const vocSlice = createSlice({
@@ -17,22 +19,20 @@ const vocSlice = createSlice({
     updateVoc(state, action) {
       state.voc.eng = action.payload.eng;
       state.voc.chi = action.payload.chi;
-
-      state.isChangeable = false;
+      state.UIstate.isChangeable = false;
     },
 
-    changeToHome(state) {},
-
     changeToBox(state) {
-      state.voc.onHomePage = false;
+      state.UIstate.onHomePage = false;
     },
 
     removeVocFromList(state, action) {
       const selectedWord = action.payload;
-      state.isClickable = true;
-      state.vocRemove = true;
+      state.UIstate.isClickable = true;
+      state.UIstate.vocRemove = true;
 
-      if (state.voc.onHomePage) {
+      //在主頁就刪掉隨機單字，不在主頁就從BOX刪掉單字
+      if (state.UIstate.onHomePage) {
         state.voc.eng = state.voc.eng.filter((voc) => voc !== selectedWord.eng);
         state.voc.chi = state.voc.chi.filter((voc) => voc !== selectedWord.chi);
       } else {
@@ -44,7 +44,7 @@ const vocSlice = createSlice({
 
     store(state, action) {
       const selectedWord = action.payload;
-      state.isClickable = true;
+      state.UIstate.isClickable = true;
 
       //存到firebase
       const newVocArray = [...state.vocStorage, selectedWord];
@@ -56,18 +56,18 @@ const vocSlice = createSlice({
     },
 
     recoverClickable(state) {
-      state.isClickable = false;
-      state.vocRemove = false;
+      state.UIstate.isClickable = false;
+      state.UIstate.vocRemove = false;
     },
 
     changeAmount(state, action) {
-      state.vocAmount = action.payload;
-      state.isChangeable = true;
+      state.voc.vocAmount = action.payload;
+      state.UIstate.isChangeable = true;
     },
 
     changeNewVoc(state) {
       state.vocChange = !state.vocChange;
-      state.isChangeable = true;
+      state.UIstate.isChangeable = true;
     },
 
     updateDetail(state, action) {
@@ -76,7 +76,7 @@ const vocSlice = createSlice({
     },
 
     resetVoc(state) {
-      state.voc.onHomePage = true;
+      state.UIstate.onHomePage = true;
       state.voc.eng = [];
       state.voc.chi = [];
     },

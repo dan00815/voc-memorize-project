@@ -5,6 +5,7 @@ const initialState = {
   isClickable: false,
   progressBar: 1500,
   audio: false,
+  pagintaion: { boxVoc: [], activePage: 1, perPageAmount: 6 },
 };
 
 const ulSlice = createSlice({
@@ -57,6 +58,14 @@ const ulSlice = createSlice({
     },
     closeAudio(state) {
       state.audio = false;
+    },
+
+    updatedActivePage(state, action) {
+      state.pagintaion.activePage = action.payload;
+    },
+
+    updatePageVoc(state, action) {
+      state.pagintaion.boxVoc = action.payload;
     },
   },
 });

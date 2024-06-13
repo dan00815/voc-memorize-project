@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import classes from "./Vocabulary-item.module.scss";
 import Button from "../UI/Button";
 import Modal from "../Modal";
+import { definitionUrl, exampleUrl } from "../../asset/url";
 
 import { useDispatch, useSelector } from "react-redux";
 import { vocActions } from "../../store/voc-slice";
@@ -9,16 +10,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
-const VocabulartItem = ({ eng, chi, store }) => {
+const VocabulartItem = ({ eng, chi }) => {
   const dialogRef = useRef();
   const dispatch = useDispatch();
-  const wordnik_definition_URL = `https://api.wordnik.com/v4/word.json/${eng}/definitions?limit=3&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=${process.env.REACT_APP_WORDNIK_API}`;
-  const wordnik_example_URL = `https://api.wordnik.com/v4/word.json/${eng}/topExample?useCanonical=false&api_key=${process.env.REACT_APP_WORDNIK_API}`;
-
-  const vocDetail = useSelector((state) => state.voc.vocDetail);
   const vocStorage = useSelector((state) => state.voc.vocStorage);
-  const isClickable = useSelector((state) => state.voc.isClickable);
-  const onHomePage = useSelector((state) => state.voc.voc.onHomePage);
+  const isClickable = useSelector((state) => state.voc.UIstate.isClickable);
+  const onHomePage = useSelector((state) => state.voc.UIstate.onHomePage);
+  const vocLength = useSelector((state) => state.voc.voc.eng.length);
 
   useEffect(() => {
     fetch(
@@ -26,6 +24,12 @@ const VocabulartItem = ({ eng, chi, store }) => {
       { method: "PUT", body: JSON.stringify(vocStorage) }
     );
   }, [vocStorage]);
+
+  function updateVocCheck() {
+    if (vocLength === 1) {
+      dispatch(vocActions.changeNewVoc());
+    }
+  }
 
   function rememberClickHandler() {
     if (isClickable) return;
@@ -36,6 +40,9 @@ const VocabulartItem = ({ eng, chi, store }) => {
         dispatch(vocActions.recoverClickable());
       }, 1500);
     }
+
+    //如果點完最後一個就更新單字庫
+    updateVocCheck();
   }
 
   function storeVoc() {
@@ -47,15 +54,20 @@ const VocabulartItem = ({ eng, chi, store }) => {
         dispatch(vocActions.recoverClickable());
       }, 1500);
     }
+
+    //如果點完最後一個就更新單字庫
+    updateVocCheck();
   }
 
   async function openDetail(e) {
     if (e.target.tagName === "svg" || e.target.tagName === "path") {
       try {
-        const definition = await axios.get(wordnik_definition_URL);
+        const defiUrl = definitionUrl(eng);
+        const definition = await axios.get(defiUrl);
         const definitionResult = definition.data[0].text;
 
-        const exampleSentence = await axios.get(wordnik_example_URL);
+        const exUrl = exampleUrl(eng);
+        const exampleSentence = await axios.get(exUrl);
         const exampleSentenceResult = exampleSentence.data.text;
 
         dispatch(
@@ -64,11 +76,11 @@ const VocabulartItem = ({ eng, chi, store }) => {
             sentence: exampleSentenceResult,
           })
         );
+
+        dialogRef.current.showModal();
       } catch (error) {
         console.log(error.message);
       }
-
-      dialogRef.current.showModal();
     } else return;
   }
 
@@ -86,13 +98,7 @@ const VocabulartItem = ({ eng, chi, store }) => {
         </div>
       </li>
 
-      <Modal
-        ref={dialogRef}
-        vocData={{ eng, chi }}
-        definition={vocDetail.definition ?? "not support"}
-        sentence={vocDetail.sentence ?? "not support"}
-        storeFn={storeVoc}
-      />
+      <Modal ref={dialogRef} vocData={{ eng, chi }} storeFn={storeVoc} />
     </>
   );
 };

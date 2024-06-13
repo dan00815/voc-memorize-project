@@ -18,9 +18,9 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const show = useSelector((state) => state.dictionary.show);
   const vocFromFirebase = useSelector((state) => state.voc.vocStorage);
-  const onHomePage = useSelector((state) => state.voc.voc.onHomePage);
-  const vocRemove = useSelector((state) => state.voc.vocRemove);
-  const isClickable = useSelector((state) => state.voc.isClickable);
+  const onHomePage = useSelector((state) => state.voc.UIstate.onHomePage);
+  const vocRemove = useSelector((state) => state.voc.UIstate.vocRemove);
+  const isClickable = useSelector((state) => state.voc.UIstate.isClickable);
 
   const amountError = useSelector((state) => state.ui.error.amountError);
 
@@ -44,7 +44,7 @@ const Navigation = () => {
 
   return (
     <>
-      <Navbar className={classes.nav} expand="md" sticky="top">
+      <Navbar className={classes.nav} expand="lg" sticky="top">
         {isClickable && (
           <Hint
             message={vocRemove ? "Good ! Keep Going" : "Put Into Box !"}
@@ -81,6 +81,15 @@ const Navigation = () => {
               </Link>
               <Link to="/box" onClick={resetDictionary}>
                 <p className={showBox}>BOX({vocFromFirebase.length})</p>
+              </Link>
+              <Link to="/login">
+                <p>Login</p>
+              </Link>
+              <Link to="/register">
+                <p>Register</p>
+              </Link>
+              <Link>
+                <p>Sign out</p>
               </Link>
             </Nav>
           </Navbar.Collapse>
