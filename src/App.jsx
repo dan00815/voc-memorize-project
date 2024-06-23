@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./page/Layout";
 import Homepage from "./page/Homepage";
-import BoxPage from "./page/BoxPage";
-import Login from "./page/Login";
-import Register from "./page/Register";
+import ProfilePage from "./page/ProfilePage";
+import LoginPage from "./page/LoginPage";
+import RegisterPage from "./page/RegisterPage";
 import Error from "./page/Error";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -38,9 +38,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Homepage />}></Route>
-            <Route path="/box" element={<BoxPage />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/register" element={<Register />}></Route>
+            <Route path="/profile" element={<ProfilePage />}></Route>
+            <Route path="/login" element={<LoginPage />}></Route>
+            <Route path="/register" element={<RegisterPage />}></Route>
             <Route path="*" element={<Error />}></Route>
           </Route>
         </Routes>

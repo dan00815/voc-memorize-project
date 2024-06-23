@@ -1,0 +1,43 @@
+.registerForm {
+  border-radius: 15px;
+  background-color: bisque;
+  border: 3px solid white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 40vw;
+  margin: 2rem auto;
+  padding: 2rem 0;
+
+  p {
+    border-radius: 30px;
+    padding: 0.75rem 2rem;
+    // 2% 8%
+    text-align: center;
+    background-color: crimson;
+    font-size: 1.25rem;
+    color: white;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .formGroup {
+    width: 70%;
+    label {
+      display: flex;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+  }
+
+  .imgContainer {
+    margin: 1rem;
+    width: 40%;
+    height: 40%;
+
+    img {
+      width: 100%;
+    }
+  }
+}

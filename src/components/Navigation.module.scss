@@ -28,26 +28,28 @@
   img {
     width: 5rem;
   }
-}
 
-.navContainer {
-  width: 100%;
-  .show {
-    color: black;
-    background-color: white;
-  }
-  p {
-    color: white;
-    font-weight: bold;
-    border-radius: 50px;
-    list-style-type: none;
-    font-size: 2rem;
-    padding: 10px;
-    margin: 5px 10px;
-    transition: all 0.2s ease-in-out;
-    &:hover {
+  .navContainer {
+    width: 100%;
+
+    .show {
       color: black;
       background-color: white;
+    }
+
+    p {
+      color: white;
+      font-weight: bold;
+      border-radius: 50px;
+      list-style-type: none;
+      font-size: 2rem;
+      padding: 10px;
+      margin: 5px 10px;
+      transition: all 0.2s ease-in-out;
+      &:hover {
+        color: black;
+        background-color: white;
+      }
     }
   }
 }

@@ -3,8 +3,7 @@ import classes from "./Navigation.module.scss";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-
-import { Link } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Hint from "./Hint";
 import logo from "../asset/images/onlylogo.png";
 import { useDispatch } from "react-redux";
@@ -13,16 +12,23 @@ import { useSelector } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import { loginActions } from "../store/login-slice";
+
+const url = "https://voc-backend-sql.onrender.com/logout";
 
 const Navigation = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const show = useSelector((state) => state.dictionary.show);
-  const vocFromFirebase = useSelector((state) => state.voc.vocStorage);
-  const onHomePage = useSelector((state) => state.voc.UIstate.onHomePage);
   const vocRemove = useSelector((state) => state.voc.UIstate.vocRemove);
   const isClickable = useSelector((state) => state.voc.UIstate.isClickable);
-
   const amountError = useSelector((state) => state.ui.error.amountError);
+  const isLogin = useSelector((state) => state.login.info.isAuth);
+
+  function clickEventHandler() {
+    dispatch(loginActions.clearError());
+  }
 
   function resetDictionary() {
     window.scrollTo(0, 0);
@@ -33,13 +39,24 @@ const Navigation = () => {
     dispatch(dictiActions.showDictionary());
   }
 
-  let showClass = undefined;
-  let showBox = undefined;
-  if (show) {
-    showClass = classes.show;
+  async function signOut() {
+    const res = await axios.post(url);
+
+    //這裡也要將字典關掉
+    dispatch(dictiActions.resetDictionary());
+
+    // 將回傳的isAuthenticated 更新redux auth狀態
+    dispatch(loginActions.updateAuth(res.data.isAuthenticated));
+
+    // 清除localstorage
+    localStorage.removeItem("auth");
+
+    navigate("/");
   }
-  if (!onHomePage) {
-    showBox = classes.show;
+
+  let showDic = undefined;
+  if (show) {
+    showDic = classes.show;
   }
 
   return (
@@ -74,23 +91,43 @@ const Navigation = () => {
 
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className={`justify-content-end ${classes.navContainer}`}>
-              <Link>
-                <p onClick={showDictionaryHandler} className={showClass}>
-                  Dictionary
-                </p>
-              </Link>
-              <Link to="/box" onClick={resetDictionary}>
-                <p className={showBox}>BOX({vocFromFirebase.length})</p>
-              </Link>
-              <Link to="/login">
-                <p>Login</p>
-              </Link>
-              <Link to="/register">
-                <p>Register</p>
-              </Link>
-              <Link>
-                <p>Sign out</p>
-              </Link>
+              {isLogin && (
+                <Link onClick={showDictionaryHandler}>
+                  <p className={showDic}>Dictionary</p>
+                </Link>
+              )}
+
+              {/* BOX({vocFromFirebase.length}) */}
+
+              <NavLink to="/profile" onClick={resetDictionary}>
+                {({ isActive }) => (
+                  <p className={isActive ? classes.show : undefined}>Profile</p>
+                )}
+              </NavLink>
+
+              {!isLogin && (
+                <NavLink to="/login" onClick={clickEventHandler}>
+                  {({ isActive }) => (
+                    <p className={isActive ? classes.show : undefined}>Login</p>
+                  )}
+                </NavLink>
+              )}
+
+              {!isLogin && (
+                <NavLink to="/register" onClick={clickEventHandler}>
+                  {({ isActive }) => (
+                    <p className={isActive ? classes.show : undefined}>
+                      Register
+                    </p>
+                  )}
+                </NavLink>
+              )}
+
+              {isLogin && (
+                <Link onClick={signOut}>
+                  <p>Sign out</p>
+                </Link>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
