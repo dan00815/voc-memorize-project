@@ -4,13 +4,12 @@ import classes from "./Login.module.scss";
 import SpinnerElm from "../UI/Spinner";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import useGetLoginState from "../../HOOKs/useGetLoginState";
 import axios from "axios";
 
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../../store/login-slice";
 
-const url = "https://voc-backend-sql.onrender.com/login";
+import { loginUrl } from "../../asset/url";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,7 +18,7 @@ const Login = () => {
   const errorMsg = useSelector((state) => state.login.errorLoginMsg);
   const loadingState = useSelector((state) => state.login.loading);
 
-  useGetLoginState();
+  // useGetLoginState();
 
   async function submitEvent(e) {
     e.preventDefault();
@@ -31,19 +30,22 @@ const Login = () => {
     dispatch(loginActions.loading());
 
     try {
-      const res = await axios.post(url, data);
+      const res = await axios.post(loginUrl, data, { withCredentials: true });
 
-      //登入成功後會拿到auth = true
-      const auth = res.data.isAuthenticated;
+      //登入成功後會拿到後端寄的資訊
+      const auth = res.data.isAuthenticated; //true
       const userName = res.data.name;
+      const vocStorage = res.data.vocStorage;
 
-      //auth存進localStorage記得
-      localStorage.setItem("auth", auth);
+      //auth存進localStorage記得(可不用特別一個)
+      // localStorage.setItem("auth", auth);
+
       //資料放進reudx方便其他組件使用
       dispatch(
         loginActions.updateLoginState({
           isAuth: auth,
           name: userName,
+          vocStorage,
         })
       );
 

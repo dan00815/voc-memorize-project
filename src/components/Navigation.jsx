@@ -15,7 +15,7 @@ import { faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { loginActions } from "../store/login-slice";
 
-const url = "https://voc-backend-sql.onrender.com/logout";
+import { logoutUrl } from "../asset/url";
 
 const Navigation = () => {
   const dispatch = useDispatch();
@@ -40,18 +40,15 @@ const Navigation = () => {
   }
 
   async function signOut() {
-    const res = await axios.post(url);
+    const res = await axios.post(logoutUrl);
 
     //這裡也要將字典關掉
     dispatch(dictiActions.resetDictionary());
 
+    navigate("/");
+
     // 將回傳的isAuthenticated 更新redux auth狀態
     dispatch(loginActions.updateAuth(res.data.isAuthenticated));
-
-    // 清除localstorage
-    localStorage.removeItem("auth");
-
-    navigate("/");
   }
 
   let showDic = undefined;

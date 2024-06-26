@@ -1,17 +1,33 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 
 import ulSlice from "./ui-slice";
 import vocSlice from "./voc-slice";
 import dictiSlice from "./dictionary-slice";
 import loginSlice from "./login-slice";
 
-const store = configureStore({
-  reducer: {
-    ui: ulSlice.reducer,
-    voc: vocSlice.reducer,
-    dictionary: dictiSlice.reducer,
-    login: loginSlice.reducer,
-  },
+import storage from "redux-persist/lib/storage";
+import { persistStore, persistReducer } from "redux-persist";
+
+const rootReducer = combineReducers({
+  ui: ulSlice.reducer,
+  voc: vocSlice.reducer,
+  dictionary: dictiSlice.reducer,
+  login: loginSlice.reducer,
 });
 
-export default store;
+//login slice會永久儲存在localstorage
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["login"],
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = configureStore({
+  reducer: persistedReducer,
+});
+
+const persistor = persistStore(store);
+
+export { store, persistor };

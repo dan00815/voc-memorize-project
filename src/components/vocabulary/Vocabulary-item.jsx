@@ -45,7 +45,7 @@ const VocabulartItem = ({ eng, chi }) => {
     updateVocCheck();
   }
 
-  function storeVoc() {
+  async function storeVoc() {
     if (isClickable) return;
     else {
       dispatch(vocActions.store({ eng, chi }));

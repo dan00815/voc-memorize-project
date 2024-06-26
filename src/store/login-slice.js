@@ -3,6 +3,7 @@ const initialState = {
   info: {
     isAuth: false,
     name: "",
+    vocStorage: 0,
   },
 
   loading: false,
@@ -45,6 +46,10 @@ const loginSlice = createSlice({
 
     updateAuth(state, action) {
       state.info.isAuth = action.payload;
+
+      if (state.info.isAuth === false) {
+        window.alert("您已經登出");
+      }
     },
   },
 });

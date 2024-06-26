@@ -7,7 +7,6 @@ import { vocActions } from "../store/voc-slice";
 import { Pagination, Button } from "react-bootstrap";
 import { uiActions } from "../store/ui-slice";
 import { useNavigate } from "react-router-dom";
-import useGetLoginState from "../HOOKs/useGetLoginState";
 import { loginActions } from "../store/login-slice";
 
 const Box = () => {
@@ -20,7 +19,6 @@ const Box = () => {
     vocFromFirebase.length / pagination.perPageAmount
   );
 
-  useGetLoginState();
 
   useEffect(() => {
     dispatch(vocActions.changeToBox());

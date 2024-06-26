@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../../store/login-slice";
 import axios from "axios";
-const url = "https://voc-backend-sql.onrender.com/users";
+import { registerUrl } from "../../asset/url";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -24,11 +24,14 @@ const Register = () => {
     dispatch(loginActions.loading());
 
     try {
-      await axios.post(url, data);
-
-      navigate("/login");
+      await axios.post(registerUrl, data);
 
       dispatch(loginActions.clearLoading());
+
+      navigate("/login");
+      setTimeout(() => {
+        alert("註冊成功");
+      }, 1000);
     } catch (error) {
       console.log(error);
       const errorMsg = error.response.data.message;

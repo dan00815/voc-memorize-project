@@ -10,8 +10,6 @@ import { wordnik_URL, translateUrl } from "../../asset/url";
 import { useSelector, useDispatch } from "react-redux";
 import { uiActions } from "../../store/ui-slice";
 import { vocActions } from "../../store/voc-slice";
-// import { loginActions } from "../../store/login-slice";
-import useGetLoginState from "../../HOOKs/useGetLoginState";
 
 const Vocabulary = () => {
   const dispatch = useDispatch();
@@ -19,8 +17,6 @@ const Vocabulary = () => {
   const VOC_DATA = useSelector((state) => state.voc.voc);
   const vocAmount = useSelector((state) => state.voc.voc.vocAmount);
   const vocChange = useSelector((state) => state.voc.vocChange);
-
-  useGetLoginState();
 
   useEffect(() => {
     async function fetchData() {
