@@ -1,16 +1,21 @@
 import React from "react";
 import classes from "./ProfileInfo.module.scss";
 import { useSelector } from "react-redux";
-import axios from "axios";
+// import axios from "axios";
+// import { backendHome } from "../asset/url";
 
 const Profile = () => {
   const loginInfo = useSelector((state) => state.login.info);
 
   async function test() {
-    const res = await axios.post(
-      "https://voc-backend-sql.onrender.com/vocabularies"
-    );
-    console.log(res.data);
+    // try {
+    //   const res = await axios.get(backendHome);
+    //   console.log(res);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    const aa = window.matchMedia("(max-width: 599px)").matches;
+    console.log(aa);
   }
 
   return (
@@ -24,9 +29,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-//可以取得persist lcoalstorage的資料
-// const res = localStorage.getItem("persist:root");
-// const loginInfo = JSON.parse(res).login;
-// console.log(JSON.parse(loginInfo));
-//const loaginState = JSON.parse(loginInfo).info.isAuth

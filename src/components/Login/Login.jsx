@@ -49,7 +49,6 @@ const Login = () => {
         })
       );
 
-      //跳轉到box，應該就能看到東西了
       navigate("/profile");
     } catch (error) {
       const errorMsg = error.response.data.message;

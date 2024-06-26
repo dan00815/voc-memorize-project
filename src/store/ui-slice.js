@@ -67,6 +67,11 @@ const ulSlice = createSlice({
     updatePageVoc(state, action) {
       state.pagintaion.boxVoc = action.payload;
     },
+
+    //依照media query的不同，更新分頁器的每頁呈現數量
+    updataPerPageAmount(state, action) {
+      state.pagintaion.perPageAmount = action.payload;
+    },
   },
 });
 

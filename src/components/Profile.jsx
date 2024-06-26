@@ -9,19 +9,32 @@ import { uiActions } from "../store/ui-slice";
 import { useNavigate } from "react-router-dom";
 import { loginActions } from "../store/login-slice";
 
+//有一個funciton判斷現在的media，符合回傳true
+function checkMedia() {
+  const media = window.matchMedia(
+    "(min-width: 768px) and (max-width: 1024px)"
+  ).matches;
+
+  return media;
+}
+
 const Box = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const vocFromFirebase = useSelector((state) => state.voc.vocStorage);
-  const pagination = useSelector((state) => state.ui.pagintaion);
   const isLoginState = useSelector((state) => state.login.info.isAuth);
+  const pagination = useSelector((state) => state.ui.pagintaion);
   const totalPage = Math.ceil(
     vocFromFirebase.length / pagination.perPageAmount
   );
 
-
   useEffect(() => {
     dispatch(vocActions.changeToBox());
+
+    const mobie = checkMedia();
+    if (mobie) {
+      dispatch(uiActions.updataPerPageAmount(8));
+    }
   });
 
   //依照當前頁數去抓到我要呈現的單字資料

@@ -7,6 +7,7 @@ const initialState = {
   },
 
   loading: false,
+  registerInfo: false,
   errorLoginMsg: null,
   errorRegisterMsg: null,
 };
@@ -33,23 +34,29 @@ const loginSlice = createSlice({
       state.loading = false;
       state.errorLoginMsg = action.payload;
     },
-
     updateRegisterError(state, action) {
       state.loading = false;
       state.errorRegisterMsg = action.payload;
     },
-
     clearError(state) {
       state.errorLoginMsg = null;
       state.errorRegisterMsg = null;
     },
 
-    updateAuth(state, action) {
+    logout(state, action) {
       state.info.isAuth = action.payload;
 
       if (state.info.isAuth === false) {
         window.alert("您已經登出");
       }
+    },
+
+    //註冊成功的通知與清除
+    registerInfo(state) {
+      state.registerInfo = true;
+    },
+    ckearInfo(state) {
+      state.registerInfo = false;
     },
   },
 });

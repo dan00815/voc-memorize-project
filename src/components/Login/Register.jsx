@@ -29,9 +29,12 @@ const Register = () => {
       dispatch(loginActions.clearLoading());
 
       navigate("/login");
+
+      dispatch(loginActions.registerInfo());
+
       setTimeout(() => {
-        alert("註冊成功");
-      }, 1000);
+        dispatch(loginActions.ckearInfo());
+      }, 1500);
     } catch (error) {
       console.log(error);
       const errorMsg = error.response.data.message;

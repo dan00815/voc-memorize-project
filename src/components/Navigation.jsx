@@ -25,6 +25,7 @@ const Navigation = () => {
   const isClickable = useSelector((state) => state.voc.UIstate.isClickable);
   const amountError = useSelector((state) => state.ui.error.amountError);
   const isLogin = useSelector((state) => state.login.info.isAuth);
+  const registerInfo = useSelector((state) => state.login.registerInfo);
 
   function clickEventHandler() {
     dispatch(loginActions.clearError());
@@ -48,7 +49,7 @@ const Navigation = () => {
     navigate("/");
 
     // 將回傳的isAuthenticated 更新redux auth狀態
-    dispatch(loginActions.updateAuth(res.data.isAuthenticated));
+    dispatch(loginActions.logout(res.data.isAuthenticated));
   }
 
   let showDic = undefined;
@@ -68,6 +69,12 @@ const Navigation = () => {
         {amountError && (
           <Hint
             message={amountError}
+            icon={<FontAwesomeIcon icon={faCircleInfo} />}
+          />
+        )}
+        {registerInfo && (
+          <Hint
+            message="註冊成功!"
             icon={<FontAwesomeIcon icon={faCircleInfo} />}
           />
         )}
