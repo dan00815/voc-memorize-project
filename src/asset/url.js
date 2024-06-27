@@ -10,16 +10,16 @@ export const exampleUrl = (eng) => {
   return `https://api.wordnik.com/v4/word.json/${eng}/topExample?useCanonical=false&api_key=${process.env.REACT_APP_WORDNIK_API}`;
 };
 
-// export const loginUrl = "https://voc-backend-sql.onrender.com/login";
-// export const logoutUrl = "https://voc-backend-sql.onrender.com/logout";
-// export const registerUrl = "https://voc-backend-sql.onrender.com/users";
+export const loginUrl = "https://voc-backend-sql.onrender.com/login";
+export const logoutUrl = "https://voc-backend-sql.onrender.com/logout";
+export const registerUrl = "https://voc-backend-sql.onrender.com/users";
 
-// export const storeVocUrl = "https://voc-backend-sql.onrender.com/vocabularies";
-// export const backendHome = "https://voc-backend-sql.onrender.com/";
+export const storeVocUrl = "https://voc-backend-sql.onrender.com/vocabularies";
+export const backendHome = "https://voc-backend-sql.onrender.com/";
 
-export const loginUrl = "https://voc-backup.onrender.com/login";
-export const logoutUrl = "https://voc-backup.onrender.com/logout";
-export const registerUrl = "https://voc-backup.onrender.com/users";
+// export const loginUrl = "https://voc-backup.onrender.com/login";
+// export const logoutUrl = "https://voc-backup.onrender.com/logout";
+// export const registerUrl = "https://voc-backup.onrender.com/users";
 
-export const storeVocUrl = "https://voc-backup.onrender.com/vocabularies";
-export const backendHome = "https://voc-backup.onrender.com/";
+// export const storeVocUrl = "https://voc-backup.onrender.com/vocabularies";
+// export const backendHome = "https://voc-backup.onrender.com/";

@@ -1,21 +1,19 @@
 import React from "react";
 import classes from "./ProfileInfo.module.scss";
 import { useSelector } from "react-redux";
-// import axios from "axios";
-// import { backendHome } from "../asset/url";
+import axios from "axios";
+import { backendHome } from "../asset/url";
 
 const Profile = () => {
   const loginInfo = useSelector((state) => state.login.info);
 
   async function test() {
-    // try {
-    //   const res = await axios.get(backendHome);
-    //   console.log(res);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    const aa = window.matchMedia("(max-width: 599px)").matches;
-    console.log(aa);
+    try {
+      const res = await axios.get(backendHome);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
