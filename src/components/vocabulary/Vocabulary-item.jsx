@@ -17,6 +17,7 @@ const VocabulartItem = ({ eng, chi }) => {
   const isClickable = useSelector((state) => state.voc.UIstate.isClickable);
   const onHomePage = useSelector((state) => state.voc.UIstate.onHomePage);
   const vocLength = useSelector((state) => state.voc.voc.eng.length);
+  const isAuth = useSelector((state) => state.login.info.isAuth);
 
   useEffect(() => {
     fetch(
@@ -94,7 +95,9 @@ const VocabulartItem = ({ eng, chi }) => {
         <h2>{eng}</h2>
         <div className={classes.action}>
           <Button btnName="Got it" bgRemember onClick={rememberClickHandler} />
-          {onHomePage && <Button btnName="Store" bgStore onClick={storeVoc} />}
+          {onHomePage && isAuth && (
+            <Button btnName="Store" bgStore onClick={storeVoc} />
+          )}
         </div>
       </li>
 
