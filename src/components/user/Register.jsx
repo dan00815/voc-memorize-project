@@ -8,12 +8,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../../store/login-slice";
 import axios from "axios";
 import { registerUrl } from "../../asset/url";
+import { uiActions } from "../../store/ui-slice";
 
 const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const errorMsg = useSelector((state) => state.login.errorRegisterMsg);
-  const loadingState = useSelector((state) => state.login.loading);
+  const spinner = useSelector((state) => state.ui.spinner);
+
+  useEffect(() => {
+    dispatch(loginActions.clearError());
+  }, [dispatch]);
 
   async function submitEvent(e) {
     e.preventDefault();
@@ -21,30 +26,31 @@ const Register = () => {
     const fdObj = new FormData(e.target);
     const data = Object.fromEntries(fdObj.entries());
 
-    dispatch(loginActions.loading());
+    dispatch(uiActions.spinner());
 
     try {
       await axios.post(registerUrl, data);
 
-      dispatch(loginActions.clearLoading());
+      dispatch(uiActions.clearSpinner());
 
       navigate("/login");
 
+      //註冊成功通知
       dispatch(loginActions.registerInfo());
-
       setTimeout(() => {
-        dispatch(loginActions.ckearInfo());
+        dispatch(loginActions.clearInfo());
       }, 1500);
     } catch (error) {
       console.log(error);
       const errorMsg = error.response.data.message;
+      dispatch(uiActions.clearSpinner());
       dispatch(loginActions.updateRegisterError(errorMsg));
     }
   }
 
   return (
     <>
-      {loadingState && <SpinnerElm />}
+      {spinner && <SpinnerElm />}
 
       <Form className={classes.registerForm} onSubmit={submitEvent}>
         {errorMsg && <p>{errorMsg}</p>}

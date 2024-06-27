@@ -6,6 +6,7 @@ const initialState = {
   progressBar: 1500,
   audio: false,
   pagintaion: { boxVoc: [], activePage: 1, perPageAmount: 6 },
+  spinner: false,
 };
 
 const ulSlice = createSlice({
@@ -71,6 +72,13 @@ const ulSlice = createSlice({
     //依照media query的不同，更新分頁器的每頁呈現數量
     updataPerPageAmount(state, action) {
       state.pagintaion.perPageAmount = action.payload;
+    },
+
+    spinner(state) {
+      state.spinner = true;
+    },
+    clearSpinner(state) {
+      state.spinner = false;
     },
   },
 });

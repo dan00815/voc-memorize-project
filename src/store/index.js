@@ -6,7 +6,7 @@ import dictiSlice from "./dictionary-slice";
 import loginSlice from "./login-slice";
 
 import storage from "redux-persist/lib/storage";
-import { persistStore, persistReducer } from "redux-persist";
+import { persistStore, persistReducer, PERSIST } from "redux-persist";
 
 const rootReducer = combineReducers({
   ui: ulSlice.reducer,
@@ -26,6 +26,12 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [PERSIST],
+      },
+    }),
 });
 
 const persistor = persistStore(store);

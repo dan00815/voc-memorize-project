@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import loginImg from "../../asset/images/login.png";
 import classes from "./Login.module.scss";
 import SpinnerElm from "../UI/Spinner";
@@ -10,15 +10,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../../store/login-slice";
 
 import { loginUrl } from "../../asset/url";
+import { uiActions } from "../../store/ui-slice";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.login.info.isAuth);
   const errorMsg = useSelector((state) => state.login.errorLoginMsg);
-  const loadingState = useSelector((state) => state.login.loading);
+  const spinner = useSelector((state) => state.ui.spinner);
 
-  // useGetLoginState();
+  useEffect(() => {
+    dispatch(loginActions.clearError());
+  }, [dispatch]);
 
   async function submitEvent(e) {
     e.preventDefault();
@@ -27,10 +30,10 @@ const Login = () => {
     const data = Object.fromEntries(fdObj.entries());
 
     //登入時等待的過場
-    dispatch(loginActions.loading());
+    dispatch(uiActions.spinner());
 
     try {
-      const res = await axios.post(loginUrl, data, { withCredentials: true });
+      const res = await axios.post(loginUrl, data);
 
       //登入成功後會拿到後端寄的資訊
       const auth = res.data.isAuthenticated; //true
@@ -49,16 +52,19 @@ const Login = () => {
         })
       );
 
+      dispatch(uiActions.clearSpinner());
+
       navigate("/profile");
     } catch (error) {
       const errorMsg = error.response.data.message;
+      dispatch(uiActions.clearSpinner());
       dispatch(loginActions.updateLoginError(errorMsg));
     }
   }
 
   return (
     <>
-      {loadingState && <SpinnerElm />}
+      {spinner && <SpinnerElm />}
 
       {isAuth && (
         <h1

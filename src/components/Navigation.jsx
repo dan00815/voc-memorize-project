@@ -27,10 +27,6 @@ const Navigation = () => {
   const isLogin = useSelector((state) => state.login.info.isAuth);
   const registerInfo = useSelector((state) => state.login.registerInfo);
 
-  function clickEventHandler() {
-    dispatch(loginActions.clearError());
-  }
-
   function resetDictionary() {
     window.scrollTo(0, 0);
     dispatch(dictiActions.resetDictionary());
@@ -110,7 +106,7 @@ const Navigation = () => {
               </NavLink>
 
               {!isLogin && (
-                <NavLink to="/login" onClick={clickEventHandler}>
+                <NavLink to="/login">
                   {({ isActive }) => (
                     <p className={isActive ? classes.show : undefined}>Login</p>
                   )}
@@ -118,7 +114,7 @@ const Navigation = () => {
               )}
 
               {!isLogin && (
-                <NavLink to="/register" onClick={clickEventHandler}>
+                <NavLink to="/register">
                   {({ isActive }) => (
                     <p className={isActive ? classes.show : undefined}>
                       Register

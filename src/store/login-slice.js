@@ -6,7 +6,6 @@ const initialState = {
     vocStorage: 0,
   },
 
-  loading: false,
   registerInfo: false,
   errorLoginMsg: null,
   errorRegisterMsg: null,
@@ -16,28 +15,17 @@ const loginSlice = createSlice({
   name: "login",
   initialState,
   reducers: {
-    loading(state) {
-      state.loading = true;
-    },
-
-    clearLoading(state) {
-      state.loading = false;
-    },
-
     updateLoginState(state, action) {
-      state.loading = false;
-
       state.info = action.payload;
     },
 
     updateLoginError(state, action) {
-      state.loading = false;
       state.errorLoginMsg = action.payload;
     },
     updateRegisterError(state, action) {
-      state.loading = false;
       state.errorRegisterMsg = action.payload;
     },
+
     clearError(state) {
       state.errorLoginMsg = null;
       state.errorRegisterMsg = null;
@@ -55,7 +43,7 @@ const loginSlice = createSlice({
     registerInfo(state) {
       state.registerInfo = true;
     },
-    ckearInfo(state) {
+    clearInfo(state) {
       state.registerInfo = false;
     },
   },
