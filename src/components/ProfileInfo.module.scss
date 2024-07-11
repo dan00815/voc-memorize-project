@@ -5,3 +5,16 @@
     text-decoration: underline;
   }
 }
+
+.mode {
+  display: flex;
+  align-items: center;
+  h2 {
+    padding-top: 5px;
+  }
+
+  form {
+    margin-left: 10px;
+    font-size: 1.75rem;
+  }
+}

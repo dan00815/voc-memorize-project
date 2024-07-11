@@ -14,8 +14,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { loginActions } from "../store/login-slice";
-
-import { logoutUrl } from "../asset/url";
+import { vocActions } from "../store/voc-slice";
+import { uiActions } from "../store/ui-slice";
 
 const Navigation = () => {
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const Navigation = () => {
   const vocRemove = useSelector((state) => state.voc.UIstate.vocRemove);
   const isClickable = useSelector((state) => state.voc.UIstate.isClickable);
   const amountError = useSelector((state) => state.ui.error.amountError);
-  const isLogin = useSelector((state) => state.login.info.isAuth);
+  const loginState = useSelector((state) => state.login.info.isLogin);
   const registerInfo = useSelector((state) => state.login.registerInfo);
 
   function resetDictionary() {
@@ -36,16 +36,20 @@ const Navigation = () => {
     dispatch(dictiActions.showDictionary());
   }
 
-  async function signOut() {
-    const res = await axios.post(logoutUrl);
+  function changeToProfile() {
+    resetDictionary();
+    dispatch(uiActions.resetCardMode());
+  }
 
+  async function signOut() {
     //這裡也要將字典關掉
     dispatch(dictiActions.resetDictionary());
-
-    navigate("/");
-
-    // 將回傳的isAuthenticated 更新redux auth狀態
-    dispatch(loginActions.logout(res.data.isAuthenticated));
+    //isLogin改成登出
+    dispatch(loginActions.logout());
+    //重置卡片模式
+    dispatch(uiActions.resetCardMode());
+    //把BOX的卡片都先清掉，才不會登入不同帳號時，還看的到前一個帳號的資料
+    dispatch(vocActions.replaceVoc([]));
   }
 
   let showDic = undefined;
@@ -91,21 +95,19 @@ const Navigation = () => {
 
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className={`justify-content-end ${classes.navContainer}`}>
-              {isLogin && (
+              {loginState && (
                 <Link onClick={showDictionaryHandler}>
                   <p className={showDic}>Dictionary</p>
                 </Link>
               )}
 
-              {/* BOX({vocFromFirebase.length}) */}
-
-              <NavLink to="/profile" onClick={resetDictionary}>
+              <NavLink to="/profile" onClick={changeToProfile}>
                 {({ isActive }) => (
                   <p className={isActive ? classes.show : undefined}>Profile</p>
                 )}
               </NavLink>
 
-              {!isLogin && (
+              {!loginState && (
                 <NavLink to="/login">
                   {({ isActive }) => (
                     <p className={isActive ? classes.show : undefined}>Login</p>
@@ -113,7 +115,7 @@ const Navigation = () => {
                 </NavLink>
               )}
 
-              {!isLogin && (
+              {!loginState && (
                 <NavLink to="/register">
                   {({ isActive }) => (
                     <p className={isActive ? classes.show : undefined}>
@@ -123,8 +125,8 @@ const Navigation = () => {
                 </NavLink>
               )}
 
-              {isLogin && (
-                <Link onClick={signOut}>
+              {loginState && (
+                <Link onClick={signOut} to="/">
                   <p>Sign out</p>
                 </Link>
               )}

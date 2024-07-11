@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   info: {
-    isAuth: false,
+    isLogin: false,
     name: "",
-    vocStorage: 0,
+    token: null,
   },
 
+  firstLogin: false,
   registerInfo: false,
   errorLoginMsg: null,
   errorRegisterMsg: null,
@@ -17,6 +18,15 @@ const loginSlice = createSlice({
   reducers: {
     updateLoginState(state, action) {
       state.info = action.payload;
+      state.firstLogin = true;
+    },
+
+    firstLoginToTrue(state) {
+      state.firstLogin = true;
+    },
+
+    firstLoginToFalse(state) {
+      state.firstLogin = false;
     },
 
     updateLoginError(state, action) {
@@ -31,10 +41,11 @@ const loginSlice = createSlice({
       state.errorRegisterMsg = null;
     },
 
-    logout(state, action) {
-      state.info.isAuth = action.payload;
+    logout(state) {
+      state.info.isLogin = false;
+      state.info.token = null;
 
-      if (state.info.isAuth === false) {
+      if (state.info.isLogin === false) {
         window.alert("您已經登出");
       }
     },

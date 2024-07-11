@@ -35,20 +35,12 @@ const Login = () => {
     try {
       const res = await axios.post(loginUrl, data);
 
-      //登入成功後會拿到後端寄的資訊
-      const auth = res.data.isAuthenticated; //true
-      const userName = res.data.name;
-      const vocStorage = res.data.vocStorage;
-
-      //auth存進localStorage記得(可不用特別一個)
-      // localStorage.setItem("auth", auth);
-
       //資料放進reudx方便其他組件使用
       dispatch(
         loginActions.updateLoginState({
-          isAuth: auth,
-          name: userName,
-          vocStorage,
+          isLogin: res.data.isAuthenticated, //true
+          name: res.data.name,
+          token: res.data.token,
         })
       );
 
@@ -64,7 +56,7 @@ const Login = () => {
 
   return (
     <>
-      {spinner && <SpinnerElm />}
+      {spinner && <SpinnerElm phrase="Wait a moment" />}
 
       {isAuth && (
         <h1

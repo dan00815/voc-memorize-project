@@ -17,9 +17,9 @@ const Modal = forwardRef(({ vocData, storeFn }, ref) => {
     <dialog ref={ref} className={classes.dialog}>
       <div className={classes.header}>
         <h1>
-          {vocData.eng} {vocData.chi}
+          {vocData.english} {vocData.chinese}
         </h1>
-        <Audio word={vocData.eng} />
+        <Audio word={vocData.english} />
       </div>
 
       <p>定義 : {vocDetail.definition ?? "not support"}</p>

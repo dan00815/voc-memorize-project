@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = {
-  voc: { eng: [], chi: [], vocAmount: 8 },
+  voc: { english: [], chinese: [], vocAmount: 8, deleteIndex: 0 },
   vocDetail: { definition: "", sentence: "" },
   UIstate: {
     onHomePage: false,
@@ -10,6 +11,7 @@ const initialState = {
   },
   vocChange: false,
   vocStorage: [],
+  token: null,
 };
 
 const vocSlice = createSlice({
@@ -17,8 +19,8 @@ const vocSlice = createSlice({
   initialState,
   reducers: {
     updateVoc(state, action) {
-      state.voc.eng = action.payload.eng;
-      state.voc.chi = action.payload.chi;
+      state.voc.english = action.payload.english;
+      state.voc.chinese = action.payload.chinese;
       state.UIstate.isChangeable = false;
     },
 
@@ -31,13 +33,16 @@ const vocSlice = createSlice({
       state.UIstate.isClickable = true;
       state.UIstate.vocRemove = true;
 
-      //在主頁就刪掉隨機單字，不在主頁就從BOX刪掉單字
       if (state.UIstate.onHomePage) {
-        state.voc.eng = state.voc.eng.filter((voc) => voc !== selectedWord.eng);
-        state.voc.chi = state.voc.chi.filter((voc) => voc !== selectedWord.chi);
+        state.voc.english = state.voc.english.filter(
+          (voc) => voc !== selectedWord.english
+        );
+        state.voc.chinese = state.voc.chinese.filter(
+          (voc) => voc !== selectedWord.chinese
+        );
       } else {
         state.vocStorage = state.vocStorage.filter(
-          (voc) => voc.eng !== selectedWord.eng
+          (voc) => voc.english !== selectedWord
         );
       }
     },
@@ -46,13 +51,28 @@ const vocSlice = createSlice({
       const selectedWord = action.payload;
       state.UIstate.isClickable = true;
 
-      //存到firebase
-      const newVocArray = [...state.vocStorage, selectedWord];
-      state.vocStorage = newVocArray;
+      state.voc.deleteIndex = state.voc.english.findIndex(
+        (word) => word === selectedWord.english
+      );
 
       //從HomePage的地方消除
-      state.voc.eng = state.voc.eng.filter((voc) => voc !== selectedWord.eng);
-      state.voc.chi = state.voc.chi.filter((voc) => voc !== selectedWord.chi);
+      state.voc.english = state.voc.english.filter(
+        (voc) => voc !== selectedWord.english
+      );
+      state.voc.chinese = state.voc.chinese.filter(
+        (voc) => voc !== selectedWord.chinese
+      );
+    },
+
+    reverseDelete(state, action) {
+      const selectedWord = action.payload;
+
+      state.voc.english.splice(state.voc.deleteIndex, 0, selectedWord.english);
+      state.voc.chinese.splice(state.voc.deleteIndex, 0, selectedWord.chinese);
+    },
+
+    storeNewVocData(state, action) {
+      state.vocStorage.push(action.payload);
     },
 
     recoverClickable(state) {
@@ -77,12 +97,12 @@ const vocSlice = createSlice({
 
     resetVoc(state) {
       state.UIstate.onHomePage = true;
-      state.voc.eng = [];
-      state.voc.chi = [];
+      state.voc.english = [];
+      state.voc.chinese = [];
     },
 
     replaceVoc(state, action) {
-      state.vocStorage = action.payload || [];
+      state.vocStorage = action.payload;
     },
   },
 });

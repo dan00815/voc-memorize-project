@@ -45,14 +45,13 @@ const Vocabulary = () => {
             translateData.data.translations[0].translatedText;
           return lastTranslateData;
         });
-
         const resolvedTranslateArray = await Promise.all(translateArray);
 
         //翻譯完成後，一次更新state，中英文data都放進去
         dispatch(
           vocActions.updateVoc({
-            eng: onlyWordData,
-            chi: resolvedTranslateArray,
+            english: onlyWordData,
+            chinese: resolvedTranslateArray,
           })
         );
 
@@ -89,12 +88,12 @@ const Vocabulary = () => {
 
         <ul>
           {VOC_DATA &&
-            VOC_DATA.eng.map((vocItem, index) => {
+            VOC_DATA.english.map((vocItem, index) => {
               return (
                 <VocabulartItem
                   key={index}
-                  eng={vocItem}
-                  chi={VOC_DATA.chi[index]}
+                  english={vocItem}
+                  chinese={VOC_DATA.chinese[index]}
                 />
               );
             })}

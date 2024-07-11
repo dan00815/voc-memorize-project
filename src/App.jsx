@@ -7,30 +7,14 @@ import RegisterPage from "./page/RegisterPage";
 import Error from "./page/Error";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { vocActions } from "./store/voc-slice";
+import { loginActions } from "./store/login-slice";
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const loadVoc = async () => {
-      try {
-        const res = await fetch(
-          "https://vocabulary-project-422108-default-rtdb.asia-southeast1.firebasedatabase.app/voc.json"
-        );
-        if (!res.ok) {
-          throw new Error("load voc error");
-        }
-
-        const data = await res.json();
-        dispatch(vocActions.replaceVoc(data));
-      } catch (error) {
-        console.log("抓資料錯誤");
-      }
-    };
-
-    loadVoc();
-  }, [dispatch]);
+    dispatch(loginActions.firstLoginToTrue());
+  }, []);
 
   return (
     <>

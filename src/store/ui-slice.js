@@ -7,6 +7,7 @@ const initialState = {
   audio: false,
   pagintaion: { boxVoc: [], activePage: 1, perPageAmount: 6 },
   spinner: false,
+  cardModeToggle: false,
 };
 
 const ulSlice = createSlice({
@@ -79,6 +80,14 @@ const ulSlice = createSlice({
     },
     clearSpinner(state) {
       state.spinner = false;
+    },
+
+    changeCardMode(state) {
+      state.cardModeToggle = !state.cardModeToggle;
+    },
+
+    resetCardMode(state) {
+      state.cardModeToggle = false;
     },
   },
 });
