@@ -21,7 +21,9 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const show = useSelector((state) => state.dictionary.show);
-  const vocRemove = useSelector((state) => state.voc.UIstate.vocRemove);
+  const vocRemove = useSelector(
+    (state) => state.voc.UIstate.hintState.vocRemove
+  );
   const isClickable = useSelector((state) => state.voc.UIstate.isClickable);
   const amountError = useSelector((state) => state.ui.error.amountError);
   const loginState = useSelector((state) => state.login.info.isLogin);
@@ -61,10 +63,7 @@ const Navigation = () => {
     <>
       <Navbar className={classes.nav} expand="lg" sticky="top">
         {isClickable && (
-          <Hint
-            message={vocRemove ? "Good ! Keep Going" : "Put Into Box !"}
-            icon={<FontAwesomeIcon icon={faCircleCheck} />}
-          />
+          <Hint icon={<FontAwesomeIcon icon={faCircleCheck} />} />
         )}
         {amountError && (
           <Hint

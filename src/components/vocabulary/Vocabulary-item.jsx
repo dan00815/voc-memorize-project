@@ -59,13 +59,13 @@ const VocabulartItem = ({ english, chinese, id }) => {
       alert("請先登入才能儲存單字");
     } else if (isClickable) return;
     else {
-      try {
-        // 我先從主頁刪掉單字
-        dispatch(vocActions.store({ english, chinese }));
-        setTimeout(() => {
-          dispatch(vocActions.recoverClickable());
-        }, 1500);
+      // 我先從主頁刪掉單字
+      dispatch(vocActions.store({ english, chinese }));
+      setTimeout(() => {
+        dispatch(vocActions.recoverClickable());
+      }, 1500);
 
+      try {
         //待處理，儲存單字還要將定義例句放進去
         const res = await axios.post(
           vocUrl,
@@ -78,7 +78,10 @@ const VocabulartItem = ({ english, chinese, id }) => {
         const vocID = res.data.vocabularyId;
         dispatch(vocActions.storeNewVocData({ english, chinese, id: vocID }));
       } catch (error) {
-        dispatch(vocActions.reverseDelete({ english, chinese }));
+        dispatch(vocActions.reverseStore({ english, chinese }));
+        setTimeout(() => {
+          dispatch(vocActions.recoverClickable());
+        }, 1500);
       }
     }
 

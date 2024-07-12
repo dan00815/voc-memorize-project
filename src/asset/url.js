@@ -13,5 +13,5 @@ export const exampleUrl = (eng) => {
 export const loginUrl = "https://voc-backup.onrender.com/login/";
 export const registerUrl = "https://voc-backup.onrender.com/users/";
 
-export const vocUrl = "https://voc-backup.onender.com/vocabularies/";
+export const vocUrl = "https://voc-backup.onrender.com/vocabularies/";
 export const backendHome = "https://voc-backup.onrender.com/";

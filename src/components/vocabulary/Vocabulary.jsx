@@ -17,6 +17,9 @@ const Vocabulary = () => {
   const VOC_DATA = useSelector((state) => state.voc.voc);
   const vocAmount = useSelector((state) => state.voc.voc.vocAmount);
   const vocChange = useSelector((state) => state.voc.vocChange);
+  const storeError = useSelector(
+    (state) => state.voc.UIstate.hintState.storeError
+  );
 
   useEffect(() => {
     async function fetchData() {
@@ -75,7 +78,9 @@ const Vocabulary = () => {
   }, [dispatch, vocAmount, vocChange]);
 
   return (
-    <div>
+    <div className={classes.class}>
+      {storeError && <div className={classes.error}>Error</div>}
+
       <Controller />
 
       <div className={classes.vocContainer}>
