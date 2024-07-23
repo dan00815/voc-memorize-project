@@ -4,6 +4,7 @@ import ulSlice from "./ui-slice";
 import vocSlice from "./voc-slice";
 import dictiSlice from "./dictionary-slice";
 import loginSlice from "./login-slice";
+import hintSlice from "./hint-slice";
 
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer, PERSIST } from "redux-persist";
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   voc: vocSlice.reducer,
   dictionary: dictiSlice.reducer,
   login: loginSlice.reducer,
+  hint: hintSlice.reducer,
 });
 
 //login slice會永久儲存在localstorage

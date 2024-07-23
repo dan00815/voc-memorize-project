@@ -10,6 +10,7 @@ import { wordnik_URL, translateUrl } from "../../asset/url";
 import { useSelector, useDispatch } from "react-redux";
 import { uiActions } from "../../store/ui-slice";
 import { vocActions } from "../../store/voc-slice";
+import { hintActions } from "../../store/hint-slice";
 
 const Vocabulary = () => {
   const dispatch = useDispatch();
@@ -17,13 +18,11 @@ const Vocabulary = () => {
   const VOC_DATA = useSelector((state) => state.voc.voc);
   const vocAmount = useSelector((state) => state.voc.voc.vocAmount);
   const vocChange = useSelector((state) => state.voc.vocChange);
-  const storeError = useSelector(
-    (state) => state.voc.UIstate.hintState.storeError
-  );
 
   useEffect(() => {
     async function fetchData() {
       try {
+        dispatch(hintActions.changeToHome());
         dispatch(vocActions.resetVoc());
 
         dispatch(
@@ -78,9 +77,7 @@ const Vocabulary = () => {
   }, [dispatch, vocAmount, vocChange]);
 
   return (
-    <div className={classes.class}>
-      {storeError && <div className={classes.error}>Error</div>}
-
+    <>
       <Controller />
 
       <div className={classes.vocContainer}>
@@ -104,7 +101,7 @@ const Vocabulary = () => {
             })}
         </ul>
       </div>
-    </div>
+    </>
   );
 };
 

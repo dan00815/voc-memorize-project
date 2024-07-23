@@ -1,0 +1,42 @@
+.formContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3rem;
+
+  .editForm {
+    background-color: bisque;
+    border: 3px solid white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    width: 50%;
+
+    .btnContainer {
+      button {
+        margin: 0 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .formContainer {
+    .editForm {
+      width: 100%;
+      .btnContainer {
+        button {
+          margin: 0 4px;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 577px) and (max-width: 1024px) {
+  .formContainer {
+    margin-top: 10%;
+    .editForm {
+      width: 80%;
+    }
+  }
+}

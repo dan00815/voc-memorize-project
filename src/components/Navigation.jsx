@@ -3,35 +3,27 @@ import classes from "./Navigation.module.scss";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Hint from "./Hint";
+import ErrorBar from "./UI/ErrorBar";
 import logo from "../asset/images/onlylogo.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { dictiActions } from "../store/dictionary-slice";
-import { useSelector } from "react-redux";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import { loginActions } from "../store/login-slice";
 import { vocActions } from "../store/voc-slice";
 import { uiActions } from "../store/ui-slice";
 
 const Navigation = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const show = useSelector((state) => state.dictionary.show);
-  const vocRemove = useSelector(
-    (state) => state.voc.UIstate.hintState.vocRemove
-  );
-  const isClickable = useSelector((state) => state.voc.UIstate.isClickable);
-  const amountError = useSelector((state) => state.ui.error.amountError);
+  const isClickable = useSelector((state) => state.hint.isClickable);
+  const hintStateError = useSelector((state) => state.hint.hintState);
   const loginState = useSelector((state) => state.login.info.isLogin);
-  const registerInfo = useSelector((state) => state.login.registerInfo);
 
   function resetDictionary() {
     window.scrollTo(0, 0);
     dispatch(dictiActions.resetDictionary());
+    dispatch(vocActions.resetVoc());
   }
 
   function showDictionaryHandler() {
@@ -43,7 +35,7 @@ const Navigation = () => {
     dispatch(uiActions.resetCardMode());
   }
 
-  async function signOut() {
+  async function logout() {
     //這裡也要將字典關掉
     dispatch(dictiActions.resetDictionary());
     //isLogin改成登出
@@ -52,6 +44,8 @@ const Navigation = () => {
     dispatch(uiActions.resetCardMode());
     //把BOX的卡片都先清掉，才不會登入不同帳號時，還看的到前一個帳號的資料
     dispatch(vocActions.replaceVoc([]));
+
+    alert("您已經登出");
   }
 
   let showDic = undefined;
@@ -62,21 +56,7 @@ const Navigation = () => {
   return (
     <>
       <Navbar className={classes.nav} expand="lg" sticky="top">
-        {isClickable && (
-          <Hint icon={<FontAwesomeIcon icon={faCircleCheck} />} />
-        )}
-        {amountError && (
-          <Hint
-            message={amountError}
-            icon={<FontAwesomeIcon icon={faCircleInfo} />}
-          />
-        )}
-        {registerInfo && (
-          <Hint
-            message="註冊成功!"
-            icon={<FontAwesomeIcon icon={faCircleInfo} />}
-          />
-        )}
+        {isClickable && <Hint />}
 
         <Container className={classes.container}>
           <Navbar.Brand>
@@ -125,7 +105,7 @@ const Navigation = () => {
               )}
 
               {loginState && (
-                <Link onClick={signOut} to="/">
+                <Link onClick={logout} to="/">
                   <p>Sign out</p>
                 </Link>
               )}
@@ -133,6 +113,10 @@ const Navigation = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
+      {(hintStateError.removeError || hintStateError.storeError) && (
+        <ErrorBar />
+      )}
     </>
   );
 };

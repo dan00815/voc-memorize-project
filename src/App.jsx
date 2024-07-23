@@ -4,6 +4,7 @@ import Homepage from "./page/Homepage";
 import ProfilePage from "./page/ProfilePage";
 import LoginPage from "./page/LoginPage";
 import RegisterPage from "./page/RegisterPage";
+import EditPage from "./page/EditPage";
 import Error from "./page/Error";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -25,6 +26,7 @@ function App() {
             <Route path="/profile" element={<ProfilePage />}></Route>
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="/register" element={<RegisterPage />}></Route>
+            <Route path="/edit/:vocID" element={<EditPage />}></Route>
             <Route path="*" element={<Error />}></Route>
           </Route>
         </Routes>

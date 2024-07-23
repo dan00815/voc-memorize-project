@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   notification: null,
-  error: { amountError: null, repeatError: null, audioError: null },
-  isClickable: false,
+  error: { repeatError: null, audioError: null },
   progressBar: 1500,
   audio: false,
   pagintaion: { boxVoc: [], activePage: 1, perPageAmount: 6 },
@@ -19,16 +18,6 @@ const ulSlice = createSlice({
         status: action.payload.status,
         title: action.payload.title,
       };
-    },
-
-    showAmountError(state, action) {
-      state.isClickable = true;
-      state.error.amountError = action.payload;
-    },
-
-    clearAmountError(state) {
-      state.isClickable = false;
-      state.error.amountError = null;
     },
 
     showRepeatError(state, action) {

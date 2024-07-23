@@ -5,15 +5,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
   width: 40vw;
-  margin: 2rem auto;
+  margin: 1.5rem auto;
   padding: 2rem 0;
 
   p {
     border-radius: 30px;
     padding: 0.75rem 2rem;
-    // 2% 8%
     text-align: center;
     background-color: crimson;
     font-size: 1.25rem;
@@ -39,5 +37,31 @@
     img {
       width: 100%;
     }
+  }
+}
+
+@media (max-width: 576px) {
+  .registerForm {
+    width: 70vw;
+    margin-top: 3rem;
+
+    .formGroup {
+      width: 80%;
+      label {
+        font-size: 1.05rem;
+      }
+    }
+
+    .imgContainer {
+      width: 60%;
+      height: 60%;
+    }
+  }
+}
+
+@media (min-width: 577px) and (max-width: 1024px) {
+  .registerForm {
+    width: 70vw;
+    margin-top: 8%;
   }
 }

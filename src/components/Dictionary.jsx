@@ -64,7 +64,7 @@ const Dictionary = () => {
     }
   }
 
-  async function clickHandler(e) {
+  async function clickHandler() {
     try {
       const searchWord = inputRef.current.value.trim().toLowerCase();
 

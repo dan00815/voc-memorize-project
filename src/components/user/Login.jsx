@@ -15,7 +15,7 @@ import { uiActions } from "../../store/ui-slice";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isAuth = useSelector((state) => state.login.info.isAuth);
+  const isLogin = useSelector((state) => state.login.info.isLogin);
   const errorMsg = useSelector((state) => state.login.errorLoginMsg);
   const spinner = useSelector((state) => state.ui.spinner);
 
@@ -58,7 +58,7 @@ const Login = () => {
     <>
       {spinner && <SpinnerElm phrase="Wait a moment" />}
 
-      {isAuth && (
+      {isLogin && (
         <h1
           style={{
             textAlign: "center",
@@ -69,7 +69,7 @@ const Login = () => {
         </h1>
       )}
 
-      {!isAuth && (
+      {!isLogin && (
         <Form className={classes.loginForm} onSubmit={submitEvent}>
           {errorMsg && <p>{errorMsg}</p>}
 
@@ -89,7 +89,7 @@ const Login = () => {
             <Form.Control type="password" name="password" />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className={classes.loginBtn}>
+          <Button variant="primary" type="submit">
             Submit
           </Button>
 

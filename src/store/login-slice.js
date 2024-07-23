@@ -7,7 +7,6 @@ const initialState = {
   },
 
   firstLogin: false,
-  registerInfo: false,
   errorLoginMsg: null,
   errorRegisterMsg: null,
 };
@@ -44,18 +43,6 @@ const loginSlice = createSlice({
     logout(state) {
       state.info.isLogin = false;
       state.info.token = null;
-
-      if (state.info.isLogin === false) {
-        window.alert("您已經登出");
-      }
-    },
-
-    //註冊成功的通知與清除
-    registerInfo(state) {
-      state.registerInfo = true;
-    },
-    clearInfo(state) {
-      state.registerInfo = false;
     },
   },
 });

@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import registerLogo from "../../asset/images/register.png";
 import classes from "./Register.module.scss";
 import SpinnerElm from "../UI/Spinner";
+import { registerUrl } from "../../asset/url";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginActions } from "../../store/login-slice";
-import axios from "axios";
-import { registerUrl } from "../../asset/url";
 import { uiActions } from "../../store/ui-slice";
+import { hintActions } from "../../store/hint-slice";
+import axios from "axios";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -33,13 +34,13 @@ const Register = () => {
 
       dispatch(uiActions.clearSpinner());
 
-      navigate("/login");
-
       //註冊成功通知
-      dispatch(loginActions.registerInfo());
+      dispatch(hintActions.registerSuccess());
       setTimeout(() => {
-        dispatch(loginActions.clearInfo());
+        dispatch(hintActions.recoverClickable());
       }, 1500);
+
+      navigate("/login");
     } catch (error) {
       console.log(error);
       const errorMsg = error.response.data.message;

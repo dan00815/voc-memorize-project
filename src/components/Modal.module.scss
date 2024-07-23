@@ -16,10 +16,25 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  position: relative;
   h1 {
     font-size: 2rem;
     margin-right: 20px;
     margin-top: 20px;
+  }
+
+  .pen {
+    cursor: pointer;
+    padding-top: 15px;
+    font-size: 2rem;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: white;
+    &:hover {
+      color: red;
+      transition: color 0.5s ease-in;
+    }
   }
 }
 

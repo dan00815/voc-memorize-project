@@ -4,10 +4,14 @@ import { createPortal } from "react-dom";
 import Button from "./UI/Button";
 import Audio from "./UI/Audio";
 import { useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
-const Modal = forwardRef(({ vocData, storeFn }, ref) => {
-  const onHomePage = useSelector((state) => state.voc.UIstate.onHomePage);
+const Modal = forwardRef(({ vocData, storeFn, id }, ref) => {
+  const onHomePage = useSelector((state) => state.hint.onHomePage);
   const vocDetail = useSelector((state) => state.voc.vocDetail);
+  const editWord = useSelector((state) => state.voc.editWord);
 
   function closeModalHandler() {
     ref.current.close();
@@ -20,10 +24,27 @@ const Modal = forwardRef(({ vocData, storeFn }, ref) => {
           {vocData.english} {vocData.chinese}
         </h1>
         <Audio word={vocData.english} />
+
+        {!onHomePage && (
+          <Link to={`/edit/${id}`}>
+            <FontAwesomeIcon icon={faPen} className={classes.pen} />
+          </Link>
+        )}
       </div>
 
-      <p>定義 : {vocDetail.definition ?? "not support"}</p>
-      <p>例句: {vocDetail.sentence ?? "not support"}</p>
+      {onHomePage && (
+        <>
+          <p>定義 : {vocDetail.definition ?? "not support"}</p>
+          <p>例句: {vocDetail.sentence ?? "not support"}</p>
+        </>
+      )}
+
+      {!onHomePage && (
+        <>
+          <p>定義 : {editWord.definition}</p>
+          <p>例句: {editWord.example}</p>
+        </>
+      )}
 
       <div className={classes.actions}>
         {onHomePage && (

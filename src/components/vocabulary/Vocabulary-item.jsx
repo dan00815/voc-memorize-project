@@ -6,17 +6,18 @@ import { definitionUrl, exampleUrl, vocUrl } from "../../asset/url";
 
 import { useDispatch, useSelector } from "react-redux";
 import { vocActions } from "../../store/voc-slice";
-import { uiActions } from "../../store/ui-slice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { hintActions } from "../../store/hint-slice";
 
-const VocabulartItem = ({ english, chinese, id }) => {
+const VocabulartItem = ({ english, chinese, definition, example, id }) => {
   const dialogRef = useRef();
   const dispatch = useDispatch();
-  const isClickable = useSelector((state) => state.voc.UIstate.isClickable);
-  const onHomePage = useSelector((state) => state.voc.UIstate.onHomePage);
   const vocLength = useSelector((state) => state.voc.voc.english.length);
+  const vocStorage = useSelector((state) => state.voc.vocStorage);
+  const isClickable = useSelector((state) => state.hint.isClickable);
+  const onHomePage = useSelector((state) => state.hint.onHomePage);
   const isLogin = useSelector((state) => state.login.info.isLogin);
   const token = useSelector((state) => state.login.info.token);
 
@@ -27,26 +28,37 @@ const VocabulartItem = ({ english, chinese, id }) => {
   }
 
   async function rememberClickHandler() {
+    function showHint() {
+      dispatch(hintActions.removeVoc());
+      setTimeout(() => {
+        dispatch(hintActions.recoverClickable());
+      }, 1500);
+    }
+
     if (isClickable) return;
     else if (onHomePage) {
-      dispatch(vocActions.removeVocFromList({ english, chinese }));
+      dispatch(vocActions.removeFromHome({ english, chinese }));
 
-      setTimeout(() => {
-        dispatch(vocActions.recoverClickable());
-      }, 1500);
+      showHint();
     } else {
-      dispatch(vocActions.removeVocFromList(english));
+      // 在BOX
+      dispatch(vocActions.removeFromBox(id));
 
-      setTimeout(() => {
-        dispatch(vocActions.recoverClickable());
-      }, 1500);
+      showHint();
 
       try {
-        axios.delete(vocUrl + id, {
+        await axios.delete(vocUrl + id, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (error) {
-        console.log(error);
+        dispatch(
+          vocActions.cancelRemove({ english, chinese, definition, example, id })
+        );
+
+        dispatch(hintActions.recoverRemove(error.message));
+        setTimeout(() => {
+          dispatch(hintActions.clearRemoveError());
+        }, 1000);
       }
     }
 
@@ -59,10 +71,12 @@ const VocabulartItem = ({ english, chinese, id }) => {
       alert("請先登入才能儲存單字");
     } else if (isClickable) return;
     else {
-      // 我先從主頁刪掉單字
-      dispatch(vocActions.store({ english, chinese }));
+      dispatch(vocActions.updateStoreIndex({ english }));
+      dispatch(vocActions.removeFromHome({ english, chinese }));
+
+      dispatch(hintActions.storeVoc());
       setTimeout(() => {
-        dispatch(vocActions.recoverClickable());
+        dispatch(hintActions.recoverClickable());
       }, 1500);
 
       try {
@@ -76,12 +90,14 @@ const VocabulartItem = ({ english, chinese, id }) => {
         );
 
         const vocID = res.data.vocabularyId;
-        dispatch(vocActions.storeNewVocData({ english, chinese, id: vocID }));
+        dispatch(vocActions.storeVocData({ english, chinese, id: vocID }));
       } catch (error) {
-        dispatch(vocActions.reverseStore({ english, chinese }));
+        dispatch(vocActions.cancelStore({ english, chinese }));
+
+        dispatch(hintActions.recoverStore(error.message));
         setTimeout(() => {
-          dispatch(vocActions.recoverClickable());
-        }, 1500);
+          dispatch(hintActions.clearStoreError());
+        }, 1000);
       }
     }
 
@@ -91,26 +107,33 @@ const VocabulartItem = ({ english, chinese, id }) => {
 
   async function openDetail(e) {
     if (e.target.tagName === "svg" || e.target.tagName === "path") {
-      try {
-        const defiUrl = definitionUrl(english);
-        const definition = await axios.get(defiUrl);
-        const definitionResult = definition.data[0].text;
-
-        const exUrl = exampleUrl(english);
-        const exampleSentence = await axios.get(exUrl);
-        const exampleSentenceResult = exampleSentence.data.text;
-
-        dispatch(
-          vocActions.updateDetail({
-            definition: definitionResult,
-            sentence: exampleSentenceResult,
-          })
-        );
-
-        dialogRef.current.showModal();
-      } catch (error) {
-        console.log(error.message);
+      //如果再Home，detail就是發API找然後放進detail更新
+      if (onHomePage) {
+        try {
+          const defiUrl = definitionUrl(english);
+          const definition = await axios.get(defiUrl);
+          const definitionResult = definition.data[0].text;
+          const exUrl = exampleUrl(english);
+          const exampleSentence = await axios.get(exUrl);
+          const exampleSentenceResult = exampleSentence.data.text;
+          dispatch(
+            vocActions.updateDetail({
+              definition: definitionResult,
+              sentence: exampleSentenceResult,
+              english,
+              chinese,
+            })
+          );
+        } catch (error) {
+          console.log(error.message);
+        }
+      } else {
+        // 在BOX中打開，用id找到選取的單字，放進selectedWord
+        const selectedVoc = vocStorage.find((word) => word.id === id);
+        dispatch(vocActions.updateEditWord(selectedVoc));
       }
+
+      dialogRef.current.showModal();
     } else return;
   }
 
@@ -132,6 +155,7 @@ const VocabulartItem = ({ english, chinese, id }) => {
         ref={dialogRef}
         vocData={{ english, chinese }}
         storeFn={storeVoc}
+        id={id}
       />
     </>
   );

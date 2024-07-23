@@ -4,15 +4,15 @@ import Input from "../UI/Input";
 import Button from "../UI/Button";
 
 import { useDispatch, useSelector } from "react-redux";
-import { uiActions } from "../../store/ui-slice";
 import { vocActions } from "../../store/voc-slice";
+import { hintActions } from "../../store/hint-slice";
 
 const VocAmountController = () => {
   const dispatch = useDispatch();
   const inputRef = useRef();
   const vocAmount = useSelector((state) => state.voc.voc.vocAmount);
-  const isClickable = useSelector((state) => state.ui.isClickable);
-  const isChangeable = useSelector((state) => state.voc.UIstate.isChangeable);
+  const isChangeable = useSelector((state) => state.voc.isChangeable);
+  const isClickable = useSelector((state) => state.hint.isClickable);
 
   function vocAmountHandler(e) {
     e.preventDefault();
@@ -20,10 +20,9 @@ const VocAmountController = () => {
     if (isClickable | isChangeable) {
       return;
     } else if (inputRef.current.value > 20 || inputRef.current.value < 1) {
-      dispatch(uiActions.showAmountError("Only Accept 1 ~ 20"));
-      //error訊息1.5秒後消失，非同步函式不能直接寫在redux裡
+      dispatch(hintActions.amountError());
       setTimeout(() => {
-        dispatch(uiActions.clearAmountError());
+        dispatch(hintActions.recoverClickable());
       }, 1500);
     } else if (inputRef.current.value === vocAmount) {
       dispatch(vocActions.changeNewVoc());

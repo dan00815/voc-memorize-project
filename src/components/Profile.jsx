@@ -13,6 +13,7 @@ import { loginActions } from "../store/login-slice";
 import Card from "./Card";
 import axios from "axios";
 import { vocUrl } from "../asset/url";
+import { hintActions } from "../store/hint-slice";
 
 //有一個funciton判斷現在的media，符合回傳true
 function checkMedia() {
@@ -58,7 +59,7 @@ const Profile = () => {
       }
     }
 
-    dispatch(vocActions.changeToBox());
+    dispatch(hintActions.changeToBox());
     const mobie = checkMedia();
     if (mobie) {
       dispatch(uiActions.updataPerPageAmount(8));
@@ -128,6 +129,8 @@ const Profile = () => {
                         key={index}
                         english={voc.english}
                         chinese={voc.chinese}
+                        definition={voc.definition}
+                        example={voc.example}
                         id={voc.id}
                       />
                     );

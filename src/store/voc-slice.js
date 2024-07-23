@@ -1,23 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  voc: { english: [], chinese: [], vocAmount: 8, deleteIndex: 0 },
-  vocDetail: { definition: "", sentence: "" },
+  voc: { english: [], chinese: [], vocAmount: 8, storeIndex: 0 },
+  vocDetail: { definition: "", sentence: "", english: "", chinese: "" },
+  isChangeable: false,
+
   UIstate: {
     onHomePage: false,
-    vocRemove: false,
     isClickable: false,
-    isChangeable: false,
     hintState: {
       vocRemove: false,
       removeError: false,
       vocStore: false,
       storeError: false,
+      amountError: false,
+      registerSuccess: false,
     },
   },
+
   vocChange: false,
   vocStorage: [],
-  token: null,
+  removeIndex: 0,
+  editWord: {},
 };
 
 const vocSlice = createSlice({
@@ -27,92 +31,84 @@ const vocSlice = createSlice({
     updateVoc(state, action) {
       state.voc.english = action.payload.english;
       state.voc.chinese = action.payload.chinese;
-      state.UIstate.isChangeable = false;
-    },
-
-    changeToBox(state) {
-      state.UIstate.onHomePage = false;
-    },
-
-    removeVocFromList(state, action) {
-      const selectedWord = action.payload;
-      state.UIstate.isClickable = true;
-      state.UIstate.hintState.vocRemove = true;
-
-      if (state.UIstate.onHomePage) {
-        state.voc.english = state.voc.english.filter(
-          (voc) => voc !== selectedWord.english
-        );
-        state.voc.chinese = state.voc.chinese.filter(
-          (voc) => voc !== selectedWord.chinese
-        );
-      } else {
-        state.vocStorage = state.vocStorage.filter(
-          (voc) => voc.english !== selectedWord
-        );
-      }
-    },
-
-    // removeError(state) {
-    //   state.UIstate.hintState.removeError = true;
-    // },
-
-    store(state, action) {
-      const selectedWord = action.payload;
-      state.UIstate.isClickable = true;
-      state.UIstate.hintState.vocStore = true;
-
-      state.voc.deleteIndex = state.voc.english.findIndex(
-        (word) => word === selectedWord.english
-      );
-
-      //從HomePage的地方消除
-      state.voc.english = state.voc.english.filter(
-        (voc) => voc !== selectedWord.english
-      );
-      state.voc.chinese = state.voc.chinese.filter(
-        (voc) => voc !== selectedWord.chinese
-      );
-    },
-
-    reverseStore(state, action) {
-      const selectedWord = action.payload;
-      state.UIstate.isClickable = true;
-      state.UIstate.hintState.storeError = true;
-
-      state.voc.english.splice(state.voc.deleteIndex, 0, selectedWord.english);
-      state.voc.chinese.splice(state.voc.deleteIndex, 0, selectedWord.chinese);
-    },
-
-    storeNewVocData(state, action) {
-      state.vocStorage.push(action.payload);
-    },
-
-    recoverClickable(state) {
-      state.UIstate.isClickable = false;
-      state.UIstate.hintState.vocRemove = false;
-      state.UIstate.hintState.removeError = false;
-      state.UIstate.hintState.vocStore = false;
-      state.UIstate.hintState.storeError = false;
+      state.isChangeable = false;
     },
 
     changeAmount(state, action) {
       state.voc.vocAmount = action.payload;
-      state.UIstate.isChangeable = true;
+      state.isChangeable = true;
     },
 
     changeNewVoc(state) {
       state.vocChange = !state.vocChange;
-      state.UIstate.isChangeable = true;
+      state.isChangeable = true;
     },
 
+    //移除跟儲存單字
+    removeFromHome(state, action) {
+      state.voc.english = state.voc.english.filter(
+        (voc) => voc !== action.payload.english
+      );
+      state.voc.chinese = state.voc.chinese.filter(
+        (voc) => voc !== action.payload.chinese
+      );
+    },
+
+    removeFromBox(state, action) {
+      state.removeIndex = state.vocStorage.findIndex(
+        (word) => word.id === action.payload
+      );
+
+      state.vocStorage = state.vocStorage.filter(
+        (voc) => voc.id !== action.payload
+      );
+    },
+
+    updateStoreIndex(state, action) {
+      state.voc.storeIndex = state.voc.english.findIndex((word) => {
+        return word === action.payload.english;
+      });
+    },
+
+    storeVocData(state, action) {
+      state.vocStorage.push(action.payload);
+    },
+
+    // 發API失敗，errorhandle
+    cancelStore(state, action) {
+      const selectedWord = action.payload;
+      state.voc.english.splice(state.voc.storeIndex, 0, selectedWord.english);
+      state.voc.chinese.splice(state.voc.storeIndex, 0, selectedWord.chinese);
+    },
+
+    cancelRemove(state, action) {
+      state.vocStorage.splice(state.removeIndex, 0, action.payload);
+    },
+
+    // 開modal跟edit頁面
     updateDetail(state, action) {
       state.vocDetail.definition = action.payload.definition;
       state.vocDetail.sentence = action.payload.sentence;
+      state.vocDetail.english = action.payload.english;
+      state.vocDetail.chinese = action.payload.chinese;
+    },
+
+    updateEditWord(state, action) {
+      state.editWord = action.payload;
+    },
+
+    editVoc(state, action) {
+      state.editWord = { ...state.editWord, ...action.payload };
+    },
+
+    storeEdit(state) {
+      const editIndex = state.vocStorage.findIndex(
+        (word) => word.id === state.editWord.id
+      );
+      state.vocStorage.splice(editIndex, 1, state.editWord);
     },
 
     resetVoc(state) {
-      state.UIstate.onHomePage = true;
       state.voc.english = [];
       state.voc.chinese = [];
     },
