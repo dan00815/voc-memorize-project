@@ -34,6 +34,11 @@ const hintSlice = createSlice({
       state.hintState.vocStore = true;
     },
 
+    registerSuccess(state) {
+      state.hintState.registerSuccess = true;
+      state.isClickable = true;
+    },
+
     //觸發一條的storeError，1秒後由clear清掉
     recoverStore(state, action) {
       state.hintState.storeError = action.payload;
@@ -53,12 +58,7 @@ const hintSlice = createSlice({
       state.isClickable = true;
     },
 
-    registerSuccess(state) {
-      state.hintState.registerSuccess = true;
-      state.isClickable = true;
-    },
-
-    
+    // 恢復可點擊狀態
     recoverClickable(state) {
       state.isClickable = false;
       state.hintState.vocRemove = false;

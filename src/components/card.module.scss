@@ -50,7 +50,9 @@
 
       .detailMsg {
         width: 80%;
-        margin-bottom: 20px;
+        height: 70%;
+        margin-bottom: 50px;
+        overflow: auto;
         p {
           font-size: 1.05rem;
           padding-top: 5px;

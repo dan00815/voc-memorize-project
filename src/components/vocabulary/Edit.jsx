@@ -7,16 +7,18 @@ import { vocActions } from "../../store/voc-slice";
 import { vocUrl } from "../../asset/url";
 import axios from "axios";
 import { uiActions } from "../../store/ui-slice";
+import { fetchVocData } from "../../store/voc-slice";
 
-const Edit = ({ id }) => {
+const Edit = ({ id, tags }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.login.info.token);
-  const editWord = useSelector((state) => state.voc.editWord);
+  const editWord = useSelector((state) => state.voc.editWord.info);
+  const tagsArray = useSelector((state) => state.voc.editWord.tags);
 
   function goBack() {
     dispatch(uiActions.resetCardMode());
-    navigate("/profile");
+    navigate(`/profile/${tags}`);
   }
 
   function editHandler(e, detailKey) {
@@ -25,18 +27,33 @@ const Edit = ({ id }) => {
 
   async function submitHandler(e) {
     e.preventDefault();
+    let finalEditWord = [];
 
     dispatch(vocActions.storeEdit());
-
-    navigate("/profile");
+    dispatch(uiActions.resetCardMode());
+    navigate(`/profile/${tags}`);
     alert("修改成功");
 
+    if (!editWord.tags) {
+      if (tagsArray.includes("__NoTag")) {
+        finalEditWord = { ...editWord };
+      } else {
+        finalEditWord = { ...editWord, tags: tagsArray };
+      }
+    } else if (tagsArray.includes("__NoTag")) {
+      finalEditWord = { ...editWord, tags: [editWord.tags] };
+    } else {
+      finalEditWord = { ...editWord, tags: [...tagsArray, editWord.tags] };
+    }
+
     try {
-      await axios.patch(vocUrl + id, editWord, {
+      await axios.patch(vocUrl + id, finalEditWord, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      dispatch(fetchVocData());
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   }
 
@@ -93,6 +110,18 @@ const Edit = ({ id }) => {
             value={editWord.example}
             onChange={(e) => {
               editHandler(e, "example");
+            }}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="editTags">
+          <Form.Label>
+            <h3>Tags</h3>
+          </Form.Label>
+          <Form.Control
+            type="text"
+            onChange={(e) => {
+              editHandler(e, "tags");
             }}
           />
         </Form.Group>

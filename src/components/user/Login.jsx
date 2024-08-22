@@ -11,6 +11,7 @@ import { loginActions } from "../../store/login-slice";
 
 import { loginUrl } from "../../asset/url";
 import { uiActions } from "../../store/ui-slice";
+import { hintActions } from "../../store/hint-slice";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -46,9 +47,14 @@ const Login = () => {
 
       dispatch(uiActions.clearSpinner());
 
+      dispatch(hintActions.changeToBox());
       navigate("/profile");
     } catch (error) {
-      const errorMsg = error.response.data.message;
+      let errorMsg = "";
+      if (error.response.data.message === undefined) {
+        errorMsg = "帳號或密碼未填寫";
+      } else errorMsg = error.response.data.message;
+
       dispatch(uiActions.clearSpinner());
       dispatch(loginActions.updateLoginError(errorMsg));
     }
@@ -89,9 +95,22 @@ const Login = () => {
             <Form.Control type="password" name="password" />
           </Form.Group>
 
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
+          <div className={classes.loginBtn}>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+
+            <Button
+              variant="light"
+              href="https://voc-backup.onrender.com/auth/google"
+            >
+              <img
+                src="https://img.icons8.com/color/16/000000/google-logo.png"
+                alt="google"
+              />
+              透過Google登入
+            </Button>
+          </div>
 
           <div className={classes.imgContainer}>
             <img src={loginImg} alt="logo" />

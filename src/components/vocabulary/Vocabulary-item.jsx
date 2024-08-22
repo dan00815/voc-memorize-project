@@ -2,29 +2,46 @@ import React, { useRef } from "react";
 import classes from "./Vocabulary-item.module.scss";
 import Button from "../UI/Button";
 import Modal from "../Modal";
-import { definitionUrl, exampleUrl, vocUrl } from "../../asset/url";
+import { vocUrl } from "../../asset/url";
 
 import { useDispatch, useSelector } from "react-redux";
 import { vocActions } from "../../store/voc-slice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
+import { faBookOpen, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { hintActions } from "../../store/hint-slice";
+import { homeVocActions } from "../../store/homePageVoc.slice";
+import { fetchVocData } from "../../store/voc-slice";
 
-const VocabulartItem = ({ english, chinese, definition, example, id }) => {
+const VocabulartItem = ({
+  english,
+  chinese,
+  definition,
+  example,
+  index,
+  id,
+  tags,
+}) => {
   const dialogRef = useRef();
   const dispatch = useDispatch();
-  const vocLength = useSelector((state) => state.voc.voc.english.length);
-  const vocStorage = useSelector((state) => state.voc.vocStorage);
   const isClickable = useSelector((state) => state.hint.isClickable);
   const onHomePage = useSelector((state) => state.hint.onHomePage);
   const isLogin = useSelector((state) => state.login.info.isLogin);
   const token = useSelector((state) => state.login.info.token);
+  const selectedVoc = useSelector((state) => state.homeVoc.vocData[index]);
+  const selectedCardStack = useSelector((state) => state.voc.selectedCardStack);
 
-  function updateVocCheck() {
-    if (vocLength === 1) {
-      dispatch(vocActions.changeNewVoc());
+  let cssName = "";
+  if (onHomePage) {
+    cssName = classes.vocItem;
+
+    if (selectedVoc.remember) {
+      cssName += ` ${classes.remember}`;
+    } else if (selectedVoc.store) {
+      cssName += ` ${classes.store}`;
     }
+  } else {
+    cssName = classes.boxVocItem;
   }
 
   async function rememberClickHandler() {
@@ -37,8 +54,7 @@ const VocabulartItem = ({ english, chinese, definition, example, id }) => {
 
     if (isClickable) return;
     else if (onHomePage) {
-      dispatch(vocActions.removeFromHome({ english, chinese }));
-
+      dispatch(homeVocActions.remember(english));
       showHint();
     } else {
       // 在BOX
@@ -50,6 +66,8 @@ const VocabulartItem = ({ english, chinese, definition, example, id }) => {
         await axios.delete(vocUrl + id, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
+        dispatch(fetchVocData());
       } catch (error) {
         dispatch(
           vocActions.cancelRemove({ english, chinese, definition, example, id })
@@ -61,38 +79,47 @@ const VocabulartItem = ({ english, chinese, definition, example, id }) => {
         }, 1000);
       }
     }
+  }
 
-    //如果點完最後一個就更新單字庫
-    updateVocCheck();
+  function cancelStore() {
+    dispatch(homeVocActions.removeStoreTag(english));
   }
 
   async function storeVoc() {
-    if (!isLogin) {
-      alert("請先登入才能儲存單字");
-    } else if (isClickable) return;
-    else {
-      dispatch(vocActions.updateStoreIndex({ english }));
-      dispatch(vocActions.removeFromHome({ english, chinese }));
-
+    function showHint() {
       dispatch(hintActions.storeVoc());
       setTimeout(() => {
         dispatch(hintActions.recoverClickable());
       }, 1500);
+    }
+
+    if (!isLogin) {
+      alert("請先登入才能儲存單字");
+    } else if (isClickable) return;
+    else {
+      dispatch(homeVocActions.store(english));
+      dispatch(homeVocActions.updateStoreIndex(english));
+
+      showHint();
 
       try {
-        //待處理，儲存單字還要將定義例句放進去
-        const res = await axios.post(
+        await axios.post(
           vocUrl,
-          { english, chinese },
+          { english, chinese, definition, example },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
 
-        const vocID = res.data.vocabularyId;
-        dispatch(vocActions.storeVocData({ english, chinese, id: vocID }));
+        // 利用這個來更新profile BOX
+        dispatch(fetchVocData());
       } catch (error) {
-        dispatch(vocActions.cancelStore({ english, chinese }));
+        console.log(error);
+        dispatch(
+          homeVocActions.cancelStore({
+            data: { english, chinese, definition, example },
+          })
+        );
 
         dispatch(hintActions.recoverStore(error.message));
         setTimeout(() => {
@@ -100,62 +127,72 @@ const VocabulartItem = ({ english, chinese, definition, example, id }) => {
         }, 1000);
       }
     }
-
-    //如果點完最後一個就更新單字庫
-    updateVocCheck();
   }
 
-  async function openDetail(e) {
-    if (e.target.tagName === "svg" || e.target.tagName === "path") {
-      //如果再Home，detail就是發API找然後放進detail更新
-      if (onHomePage) {
-        try {
-          const defiUrl = definitionUrl(english);
-          const definition = await axios.get(defiUrl);
-          const definitionResult = definition.data[0].text;
-          const exUrl = exampleUrl(english);
-          const exampleSentence = await axios.get(exUrl);
-          const exampleSentenceResult = exampleSentence.data.text;
-          dispatch(
-            vocActions.updateDetail({
-              definition: definitionResult,
-              sentence: exampleSentenceResult,
-              english,
-              chinese,
-            })
-          );
-        } catch (error) {
-          console.log(error.message);
-        }
-      } else {
-        // 在BOX中打開，用id找到選取的單字，放進selectedWord
-        const selectedVoc = vocStorage.find((word) => word.id === id);
-        dispatch(vocActions.updateEditWord(selectedVoc));
-      }
+  async function openDetail() {
+    if (onHomePage) {
+      dispatch(
+        vocActions.updateDetail({
+          definition,
+          example,
+          english,
+          chinese,
+        })
+      );
+    } else {
+      // 在BOX中打開，用id找到選取的單字，放進selectedWord
+      const selectedVoc = selectedCardStack.vocabularies.find(
+        (word) => word.vocId === id
+      );
 
-      dialogRef.current.showModal();
-    } else return;
+      dispatch(vocActions.updateEditWord(selectedVoc));
+      dispatch(vocActions.updateTags(selectedVoc.english));
+    }
+
+    dialogRef.current.showModal();
   }
 
   return (
     <>
-      <li
-        onClick={openDetail}
-        className={onHomePage ? classes.vocItem : classes["box-vocItem"]}
-      >
-        <FontAwesomeIcon icon={faBookOpen} />
+      <li className={cssName}>
+        {onHomePage && selectedVoc.store && (
+          <FontAwesomeIcon
+            icon={faBookmark}
+            className={classes.storeBookmarkIcon}
+            onClick={cancelStore}
+          />
+        )}
+
+        <FontAwesomeIcon
+          icon={faBookOpen}
+          onClick={openDetail}
+          className={classes.openBook}
+        />
         <h2>{english}</h2>
         <div className={classes.action}>
-          <Button btnName="Got it" bgRemember onClick={rememberClickHandler} />
-          {onHomePage && <Button btnName="Store" bgStore onClick={storeVoc} />}
+          <Button
+            btnName="Got it"
+            bgRemember
+            onClick={rememberClickHandler}
+            disabled={onHomePage && selectedVoc.store}
+          />
+          {onHomePage && (
+            <Button
+              btnName="Store"
+              bgStore
+              onClick={storeVoc}
+              disabled={selectedVoc.store}
+            />
+          )}
         </div>
       </li>
 
       <Modal
         ref={dialogRef}
-        vocData={{ english, chinese }}
+        vocData={{ english, chinese, definition, example }}
         storeFn={storeVoc}
         id={id}
+        index={index}
       />
     </>
   );

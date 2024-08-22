@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   notification: null,
-  error: { repeatError: null, audioError: null },
+  error: { repeatError: null, audioError: null, tagsError: null },
   progressBar: 1500,
   audio: false,
   pagintaion: { boxVoc: [], activePage: 1, perPageAmount: 6 },
@@ -34,6 +34,14 @@ const ulSlice = createSlice({
 
     clearAudioError(state) {
       state.error.audioError = null;
+    },
+
+    showTagsError(state) {
+      state.error.tagsError = true;
+    },
+
+    clearTagsError(state) {
+      state.error.tagsError = null;
     },
 
     ProgressEvent(state) {

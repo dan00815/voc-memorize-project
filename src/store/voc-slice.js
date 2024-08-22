@@ -1,121 +1,154 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { vocUrl } from "../asset/url";
+
+export const fetchVocData = createAsyncThunk(
+  "voc/fetchData",
+  async (_, thankAPI) => {
+    const token = thankAPI.getState().login.info.token;
+
+    try {
+      const res = await axios.get(vocUrl, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const vocData = res.data.data;
+      const vocAmount = res.data.vocStorage;
+
+      return { vocData, vocAmount };
+    } catch (error) {
+      console.log(error.message);
+      throw error;
+    }
+  }
+);
 
 const initialState = {
-  voc: { english: [], chinese: [], vocAmount: 8, storeIndex: 0 },
-  vocDetail: { definition: "", sentence: "", english: "", chinese: "" },
-  isChangeable: false,
+  vocDetail: { definition: "", example: "", english: "", chinese: "" },
 
-  UIstate: {
-    onHomePage: false,
-    isClickable: false,
-    hintState: {
-      vocRemove: false,
-      removeError: false,
-      vocStore: false,
-      storeError: false,
-      amountError: false,
-      registerSuccess: false,
-    },
-  },
-
-  vocChange: false,
-  vocStorage: [],
+  status: "idle",
+  vocData: [],
+  vocAmount: 0,
+  editWord: { info: null, tags: [] },
+  selectedCardStack: [], //渲染指定類別的單字
   removeIndex: 0,
-  editWord: {},
+  tagsInput: "",
 };
 
 const vocSlice = createSlice({
   name: "voc",
   initialState,
   reducers: {
-    updateVoc(state, action) {
-      state.voc.english = action.payload.english;
-      state.voc.chinese = action.payload.chinese;
-      state.isChangeable = false;
-    },
-
-    changeAmount(state, action) {
-      state.voc.vocAmount = action.payload;
-      state.isChangeable = true;
-    },
-
-    changeNewVoc(state) {
-      state.vocChange = !state.vocChange;
-      state.isChangeable = true;
-    },
-
-    //移除跟儲存單字
-    removeFromHome(state, action) {
-      state.voc.english = state.voc.english.filter(
-        (voc) => voc !== action.payload.english
-      );
-      state.voc.chinese = state.voc.chinese.filter(
-        (voc) => voc !== action.payload.chinese
-      );
+    logout(state) {
+      state.status = "idle";
+      state.vocData = [];
+      state.vocAmount = 0;
     },
 
     removeFromBox(state, action) {
-      state.removeIndex = state.vocStorage.findIndex(
-        (word) => word.id === action.payload
+      // 找index是避免呼叫API失敗時要將其放回原本位置
+      state.removeIndex = state.selectedCardStack.vocabularies.findIndex(
+        (voc) => voc.vocId === action.payload
       );
 
-      state.vocStorage = state.vocStorage.filter(
-        (voc) => voc.id !== action.payload
-      );
-    },
-
-    updateStoreIndex(state, action) {
-      state.voc.storeIndex = state.voc.english.findIndex((word) => {
-        return word === action.payload.english;
-      });
+      // 在selectedCardStack刪除
+      state.selectedCardStack.vocabularies =
+        state.selectedCardStack.vocabularies.filter(
+          (voc) => voc.vocId !== action.payload
+        );
     },
 
     storeVocData(state, action) {
-      state.vocStorage.push(action.payload);
-    },
+      const NotagIndex = state.vocData.findIndex(
+        (stack) => stack.name === "__NoTag"
+      );
 
-    // 發API失敗，errorhandle
-    cancelStore(state, action) {
-      const selectedWord = action.payload;
-      state.voc.english.splice(state.voc.storeIndex, 0, selectedWord.english);
-      state.voc.chinese.splice(state.voc.storeIndex, 0, selectedWord.chinese);
+      if (NotagIndex !== -1) {
+        state.vocData = state.vocData.map((stack, index) =>
+          index === NotagIndex
+            ? {
+                ...stack,
+                vocabularies: [...stack.vocabularies, action.payload],
+              }
+            : stack
+        );
+      }
     },
 
     cancelRemove(state, action) {
-      state.vocStorage.splice(state.removeIndex, 0, action.payload);
+      state.selectedCardStack.splice(state.removeIndex, 0, action.payload);
     },
 
-    // 開modal跟edit頁面
+    // 開modal
     updateDetail(state, action) {
       state.vocDetail.definition = action.payload.definition;
-      state.vocDetail.sentence = action.payload.sentence;
+      state.vocDetail.example = action.payload.example;
       state.vocDetail.english = action.payload.english;
       state.vocDetail.chinese = action.payload.chinese;
     },
 
     updateEditWord(state, action) {
-      state.editWord = action.payload;
+      state.editWord.info = action.payload;
     },
 
     editVoc(state, action) {
-      state.editWord = { ...state.editWord, ...action.payload };
+      state.editWord.info = { ...state.editWord.info, ...action.payload };
     },
 
+    // edit立即看到更新後畫面
     storeEdit(state) {
-      const editIndex = state.vocStorage.findIndex(
-        (word) => word.id === state.editWord.id
+      const editIndex = state.selectedCardStack.vocabularies.findIndex(
+        (word) => word.vocId === state.editWord.info.vocId
       );
-      state.vocStorage.splice(editIndex, 1, state.editWord);
+      state.selectedCardStack.vocabularies.splice(
+        editIndex,
+        1,
+        state.editWord.info
+      );
     },
 
-    resetVoc(state) {
-      state.voc.english = [];
-      state.voc.chinese = [];
+    updateSelectedStack(state, action) {
+      state.selectedCardStack = action.payload;
     },
 
-    replaceVoc(state, action) {
-      state.vocStorage = action.payload;
+    updateTagsInput(state, action) {
+      const inputTags = action.payload.trim();
+      state.tagsInput = inputTags;
     },
+
+    updateTags(state, action) {
+      const selectedTags = state.vocData
+        .filter((stack) =>
+          stack.vocabularies.some((voc) => voc.english.includes(action.payload))
+        )
+        .map((item) => item.name);
+
+      state.editWord.tags = selectedTags;
+    },
+
+    // 要直接看到反饋的話，直接把標籤放進editWord的Tags
+    addTags(state, action) {
+      const tagName = action.payload;
+      const includeNoTag = state.editWord.tags.includes("__NoTag");
+
+      if (includeNoTag) {
+        state.editWord.tags = [tagName];
+      } else state.editWord.tags = [...state.editWord.tags, tagName];
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchVocData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchVocData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.vocData = action.payload.vocData;
+        state.vocAmount = action.payload.vocAmount;
+        console.log("更新成功");
+      })
+      .addCase(fetchVocData.rejected, (state) => {
+        state.status = "failed";
+      });
   },
 });
 

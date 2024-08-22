@@ -10,6 +10,7 @@ export const exampleUrl = (eng) => {
   return `https://api.wordnik.com/v4/word.json/${eng}/topExample?useCanonical=false&api_key=${process.env.REACT_APP_WORDNIK_API}`;
 };
 
+export const dailyUrl = "https://voc-backup.onrender.com/daily";
 export const loginUrl = "https://voc-backup.onrender.com/login/";
 export const registerUrl = "https://voc-backup.onrender.com/users/";
 

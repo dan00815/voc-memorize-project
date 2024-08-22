@@ -1,0 +1,43 @@
+.cardStack {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 15px 0;
+  position: relative;
+
+  p {
+    background-color: rgba(144, 238, 144, 0.8);
+    border-radius: 10px;
+    font-size: 2rem;
+    padding: 0 15px;
+    position: absolute;
+    width: 180px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    animation: appear_effect 3.8s infinite forwards;
+  }
+
+  .imgContainer {
+    cursor: pointer;
+    width: 80%;
+    img {
+      width: 100%;
+    }
+  }
+}
+
+@keyframes appear_effect {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-80px);
+  }
+}

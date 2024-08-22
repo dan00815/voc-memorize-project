@@ -1,0 +1,23 @@
+.stackPageInfo {
+  margin: 1.5rem;
+  padding: 1rem;
+
+  .mode {
+    display: flex;
+    align-items: center;
+    h2 {
+      padding-top: 5px;
+    }
+
+    form {
+      margin-left: 10px;
+      font-size: 1.75rem;
+    }
+  }
+}
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+}

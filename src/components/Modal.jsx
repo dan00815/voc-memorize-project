@@ -1,24 +1,96 @@
-import React, { forwardRef } from "react";
+import React, { useState, forwardRef } from "react";
 import classes from "./Modal.module.scss";
 import { createPortal } from "react-dom";
 import Button from "./UI/Button";
 import Audio from "./UI/Audio";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { vocActions, fetchVocData } from "../store/voc-slice";
+import { vocUrl } from "../asset/url";
+import axios from "axios";
+import { uiActions } from "../store/ui-slice";
 
-const Modal = forwardRef(({ vocData, storeFn, id }, ref) => {
+const Modal = forwardRef(({ vocData, storeFn, id, index }, ref) => {
+  const dispatch = useDispatch();
+  const [tagOpen, setTagOpen] = useState(false);
+  const token = useSelector((state) => state.login.info.token);
   const onHomePage = useSelector((state) => state.hint.onHomePage);
-  const vocDetail = useSelector((state) => state.voc.vocDetail);
-  const editWord = useSelector((state) => state.voc.editWord);
+  const tagsInput = useSelector((state) => state.voc.tagsInput);
+  const tags = useSelector((state) => state.voc.editWord.tags);
+  const tagsError = useSelector((state) => state.ui.error.tagsError);
+  const selectedVoc = useSelector((state) => state.homeVoc.vocData[index]);
 
   function closeModalHandler() {
     ref.current.close();
+    setTagOpen(false);
+  }
+
+  function toggleTagHandler() {
+    setTagOpen(!tagOpen);
+
+    if (tagOpen === false) {
+      dispatch(vocActions.updateTagsInput(""));
+    }
+  }
+
+  function tagInputHandler(e) {
+    dispatch(vocActions.updateTagsInput(e.target.value));
+  }
+
+  async function addTag() {
+    if (tags.includes(tagsInput)) {
+      dispatch(uiActions.showTagsError());
+      setTimeout(() => {
+        dispatch(uiActions.clearTagsError());
+      }, 1000);
+    } else {
+      dispatch(vocActions.updateTagsInput(""));
+
+      // 假如是在NoTag中
+      if (tags[0] === "__NoTag") {
+        dispatch(vocActions.addTags(tagsInput));
+        setTimeout(() => {
+          closeModalHandler();
+          dispatch(vocActions.removeFromBox(id));
+        }, 1000);
+
+        try {
+          await axios.patch(
+            vocUrl + id,
+            { tags: [tagsInput] },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
+          dispatch(fetchVocData());
+        } catch (error) {
+          console.log(error.message);
+        }
+      } else {
+        dispatch(vocActions.addTags(tagsInput));
+
+        try {
+          await axios.patch(
+            vocUrl + id,
+            { tags: [...tags, tagsInput] },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
+          dispatch(fetchVocData());
+        } catch (error) {
+          console.log(error.message);
+        }
+      }
+    }
   }
 
   return createPortal(
-    <dialog ref={ref} className={classes.dialog}>
+    <dialog ref={ref} className={classes.dialog} onClose={closeModalHandler}>
       <div className={classes.header}>
         <h1>
           {vocData.english} {vocData.chinese}
@@ -26,27 +98,20 @@ const Modal = forwardRef(({ vocData, storeFn, id }, ref) => {
         <Audio word={vocData.english} />
 
         {!onHomePage && (
-          <Link to={`/edit/${id}`}>
+          <Link to={`edit/${id}`}>
             <FontAwesomeIcon icon={faPen} className={classes.pen} />
           </Link>
         )}
       </div>
 
-      {onHomePage && (
-        <>
-          <p>定義 : {vocDetail.definition ?? "not support"}</p>
-          <p>例句: {vocDetail.sentence ?? "not support"}</p>
-        </>
-      )}
-
-      {!onHomePage && (
-        <>
-          <p>定義 : {editWord.definition}</p>
-          <p>例句: {editWord.example}</p>
-        </>
-      )}
+      <>
+        <p>定義 : {vocData.definition}</p>
+        <p>例句: {vocData.example}</p>
+      </>
 
       <div className={classes.actions}>
+        <Button onClick={closeModalHandler} bgClose btnName="Close" />
+
         {onHomePage && (
           <Button
             btnName="Store"
@@ -55,10 +120,52 @@ const Modal = forwardRef(({ vocData, storeFn, id }, ref) => {
               storeFn();
               closeModalHandler();
             }}
+            disabled={selectedVoc.store}
           />
         )}
-        <Button onClick={closeModalHandler} bgClose btnName="Close" />
+
+        {!onHomePage && (
+          <>
+            <Button
+              bgStore
+              btnName="Add Tag"
+              onClick={toggleTagHandler}
+              style={{ display: !tagOpen ? "block" : "none" }}
+            />
+
+            <div
+              className={classes.tagInput}
+              style={{ display: tagOpen ? "block" : "none" }}
+            >
+              <span
+                onClick={() => {
+                  addTag();
+                }}
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </span>
+              <input
+                type="text"
+                placeholder="Add custom tags"
+                onChange={tagInputHandler}
+                value={tagsInput}
+              />
+              <span onClick={toggleTagHandler}>
+                <FontAwesomeIcon icon={faXmark} />
+              </span>
+            </div>
+          </>
+        )}
       </div>
+
+      {tagsError && <p className={classes.tagsError}>請勿輸入空白或重複標籤</p>}
+
+      {!onHomePage && (
+        <div className={classes.tags}>
+          {tags[0] !== "__NoTag" &&
+            tags.map((tagName, index) => <span key={index}>{tagName}</span>)}
+        </div>
+      )}
     </dialog>,
     document.querySelector("#modal")
   );

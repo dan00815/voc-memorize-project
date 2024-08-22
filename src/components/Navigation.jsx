@@ -12,6 +12,7 @@ import { dictiActions } from "../store/dictionary-slice";
 import { loginActions } from "../store/login-slice";
 import { vocActions } from "../store/voc-slice";
 import { uiActions } from "../store/ui-slice";
+import { hintActions } from "../store/hint-slice";
 
 const Navigation = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,6 @@ const Navigation = () => {
   function resetDictionary() {
     window.scrollTo(0, 0);
     dispatch(dictiActions.resetDictionary());
-    dispatch(vocActions.resetVoc());
   }
 
   function showDictionaryHandler() {
@@ -32,6 +32,7 @@ const Navigation = () => {
 
   function changeToProfile() {
     resetDictionary();
+    dispatch(hintActions.changeToBox());
     dispatch(uiActions.resetCardMode());
   }
 
@@ -42,8 +43,9 @@ const Navigation = () => {
     dispatch(loginActions.logout());
     //重置卡片模式
     dispatch(uiActions.resetCardMode());
+
     //把BOX的卡片都先清掉，才不會登入不同帳號時，還看的到前一個帳號的資料
-    dispatch(vocActions.replaceVoc([]));
+    dispatch(vocActions.logout());
 
     alert("您已經登出");
   }

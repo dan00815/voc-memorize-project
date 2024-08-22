@@ -1,25 +1,39 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import classes from "./Dictionary.module.scss";
 import { translateUrl } from "../asset/url";
+import { vocUrl } from "../asset/url";
 import axios from "axios";
-import Input from "./UI/Input";
 import Audio from "./UI/Audio";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import { useSelector, useDispatch } from "react-redux";
+import { fetchVocData } from "../store/voc-slice";
 import { dictiActions } from "../store/dictionary-slice";
 import { uiActions } from "../store/ui-slice";
+import { hintActions } from "../store/hint-slice";
+
+function checkWord(word) {
+  const pattern = /<em>(.*?)<\/em>/g;
+  const replaceText = word.replace(pattern, "$1");
+  return replaceText;
+}
 
 const Dictionary = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [searchWord, setSearchWord] = useState("");
   const dispatch = useDispatch();
-  const inputRef = useRef();
+  const isClickable = useSelector((state) => state.hint.isClickable);
   const dictionaryWord = useSelector((state) => state.dictionary.word);
   const dictionaryShow = useSelector((state) => state.dictionary.show);
   const hasResult = useSelector((state) => state.dictionary.hasResult);
-  const inputWord = useSelector((state) => state.dictionary.word.eng);
   const error = useSelector((state) => state.dictionary.error);
   const repeatError = useSelector((state) => state.ui.error.repeatError);
+  const token = useSelector((state) => state.login.info.token);
+
+  function inputHandler(e) {
+    setInputValue(e.target.value);
+  }
 
   async function getDictionaryData(keyword) {
     try {
@@ -36,9 +50,10 @@ const Dictionary = () => {
         defineRes.data[0].text ||
         defineRes.data[1].text ||
         defineRes.data[2].text;
+      const cleanDefine = checkWord(define);
 
       //定義的中文
-      const defineChiRes = await axios.get(`${translateUrl}&q=${define}`);
+      const defineChiRes = await axios.get(`${translateUrl}&q=${cleanDefine}`);
       const defineChi = defineChiRes.data.data.translations[0].translatedText;
 
       //拿句子
@@ -46,17 +61,20 @@ const Dictionary = () => {
         `https://api.wordnik.com/v4/word.json/${keyword}/topExample?useCanonical=false&api_key=${process.env.REACT_APP_WORDNIK_API}`
       );
       const sentence = sentenceRes.data.text;
+      const cleanSentence = checkWord(sentence);
 
       //拿句子的中文
-      const sentenceChiRes = await axios.get(`${translateUrl}&q=${sentence}`);
+      const sentenceChiRes = await axios.get(
+        `${translateUrl}&q=${cleanSentence}`
+      );
       const sentenceChi =
         sentenceChiRes.data.data.translations[0].translatedText;
 
       return {
         translateChi,
-        define,
+        define: cleanDefine,
         defineChi,
-        sentence,
+        sentence: cleanSentence,
         sentenceChi,
       };
     } catch (error) {
@@ -65,37 +83,74 @@ const Dictionary = () => {
   }
 
   async function clickHandler() {
-    try {
-      const searchWord = inputRef.current.value.trim().toLowerCase();
+    const ClearSearchWord = inputValue.trim().toLowerCase();
 
-      //若是相同查詢，則不重新發送API
-      if (searchWord === inputWord) {
+    //若是相同查詢，則不重新發送API
+    if (ClearSearchWord === searchWord) {
+      dispatch(
+        uiActions.showRepeatError("Don't enter duplicate or blank words")
+      );
+
+      setTimeout(() => {
+        dispatch(uiActions.clearRepeatError());
+      }, 1000);
+    } else {
+      const dataObj = await getDictionaryData(ClearSearchWord);
+
+      if (dataObj) {
+        setSearchWord(ClearSearchWord);
+
         dispatch(
-          uiActions.showRepeatError("Don't enter duplicate or blank words")
+          dictiActions.updatedWord({
+            eng: ClearSearchWord,
+            chi: dataObj.translateChi,
+            definition: dataObj.define,
+            translateDefi: dataObj.defineChi,
+            sentence: dataObj.sentence,
+            translateSen: dataObj.sentenceChi,
+          })
+        );
+      } else {
+        dispatch(dictiActions.errorHandle());
+      }
+    }
+  }
+
+  function showHint() {
+    dispatch(hintActions.storeVoc());
+    setTimeout(() => {
+      dispatch(hintActions.recoverClickable());
+    }, 1500);
+  }
+
+  async function addToBox() {
+    if (isClickable) return;
+    else {
+      showHint();
+
+      try {
+        await axios.post(
+          vocUrl,
+          {
+            english: dictionaryWord.eng,
+            chinese: dictionaryWord.chi,
+            definition: dictionaryWord.definition,
+            example: dictionaryWord.sentence,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
 
+        // 利用這個來更新profile BOX
+        dispatch(fetchVocData());
+      } catch (error) {
+        console.log(error.message);
+        dispatch(hintActions.recoverStore(error.message));
         setTimeout(() => {
-          dispatch(uiActions.clearRepeatError());
+          dispatch(hintActions.clearStoreError());
         }, 1000);
-        return;
       }
-
-      //用Input內單字做搜尋
-      const dataObj = await getDictionaryData(searchWord);
-
-      //將所有得來的資料放進去更新state
-      dispatch(
-        dictiActions.updatedWord({
-          eng: searchWord,
-          chi: dataObj.translateChi,
-          definition: dataObj.define,
-          translateDefi: dataObj.defineChi,
-          sentence: dataObj.sentence,
-          translateSen: dataObj.sentenceChi,
-        })
-      );
-    } catch (error) {
-      dispatch(dictiActions.errorHandle());
     }
   }
 
@@ -105,7 +160,7 @@ const Dictionary = () => {
         <div className={classes.dictionary}>
           <h1>Dictionary</h1>
           <div className={classes["input-field"]}>
-            <Input type="text" ref={inputRef} />
+            <input type="text" onChange={inputHandler} />
             <FontAwesomeIcon icon={faMagnifyingGlass} onClick={clickHandler} />
           </div>
 
@@ -113,7 +168,13 @@ const Dictionary = () => {
             <div className={classes.foundResult}>
               <div className={classes.resultContainer}>
                 <h2>中文翻譯：{dictionaryWord.chi}</h2>
-                <Audio word={inputRef.current.value} />
+                <Audio word={dictionaryWord.eng} />
+
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  onClick={addToBox}
+                  className={classes.addIcon}
+                />
               </div>
 
               <h2>定義: {dictionaryWord.definition || "not support"}</h2>

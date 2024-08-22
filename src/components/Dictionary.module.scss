@@ -44,6 +44,14 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    position: relative;
+    .addIcon {
+      cursor: pointer;
+      font-size: 2rem;
+      position: absolute;
+      right: 10px;
+      top: 1.5rem;
+    }
   }
 
   h2 {

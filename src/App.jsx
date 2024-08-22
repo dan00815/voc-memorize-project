@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./page/Layout";
 import Homepage from "./page/Homepage";
 import ProfilePage from "./page/ProfilePage";
+import CardStackPage from "./page/CardStackPage";
 import LoginPage from "./page/LoginPage";
 import RegisterPage from "./page/RegisterPage";
 import EditPage from "./page/EditPage";
@@ -24,9 +25,13 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Homepage />}></Route>
             <Route path="/profile" element={<ProfilePage />}></Route>
+            <Route path="/profile/:tags" element={<CardStackPage />}></Route>
+            <Route
+              path="/profile/:tags/edit/:vocID"
+              element={<EditPage />}
+            ></Route>
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="/register" element={<RegisterPage />}></Route>
-            <Route path="/edit/:vocID" element={<EditPage />}></Route>
             <Route path="*" element={<Error />}></Route>
           </Route>
         </Routes>

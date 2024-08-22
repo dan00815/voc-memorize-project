@@ -7,7 +7,7 @@ const EditPage = () => {
 
   return (
     <>
-      <Edit id={params.vocID} />
+      <Edit id={params.vocID} tags={params.tags} />
     </>
   );
 };
