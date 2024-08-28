@@ -12,8 +12,9 @@ const ProfilePage = () => {
 
   return (
     <>
-      <Profile />
       <Dictionary />
+      <hr />
+      <Profile />
     </>
   );
 };

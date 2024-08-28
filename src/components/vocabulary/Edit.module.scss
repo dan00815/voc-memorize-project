@@ -16,6 +16,31 @@
         margin: 0 8px;
       }
     }
+
+    .tagsContainer {
+      hr {
+        opacity: 1;
+        height: 2px;
+        color: white;
+        background-color: white;
+      }
+      .vocTags {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+          font-weight: bold;
+          text-align: center;
+          width: 18%;
+          margin: 1%;
+          padding: 10px 25px;
+          background-color: rgb(80, 118, 255, 0.7);
+          border-radius: 35px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
   }
 }
 

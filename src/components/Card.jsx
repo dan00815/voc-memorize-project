@@ -107,8 +107,7 @@ const Card = ({ tags }) => {
               </header>
 
               <div className={classes.detailMsg}>
-                <p>定義 : {voc.definition}</p>
-                <p>例句: {voc.example}</p>
+                <p>{voc.definition}</p>
               </div>
 
               <Button

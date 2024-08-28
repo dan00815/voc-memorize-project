@@ -14,6 +14,7 @@ const Edit = ({ id, tags }) => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.login.info.token);
   const editWord = useSelector((state) => state.voc.editWord.info);
+  const vocTags = useSelector((state) => state.voc.editWord.tags);
   const tagsArray = useSelector((state) => state.voc.editWord.tags);
 
   function goBack() {
@@ -133,6 +134,17 @@ const Edit = ({ id, tags }) => {
 
           <Button onClick={goBack}>返回上一頁</Button>
         </div>
+
+        {vocTags[0] !== "__NoTag" && (
+          <div className={classes.tagsContainer}>
+            <hr />
+            <div className={classes.vocTags}>
+              {vocTags.map((tagName, index) => (
+                <span key={index}>{tagName}</span>
+              ))}
+            </div>
+          </div>
+        )}
       </Form>
     </div>
   );
