@@ -29,7 +29,7 @@ const Vocabulary = () => {
             })
           );
 
-          //抓單字，更新redux，放進localstorage，記得狀態
+          //抓單字，更新redux，放進localstorage
           const res = await axios.get(dailyUrl);
 
           dispatch(homeVocActions.updateVocData(res.data));

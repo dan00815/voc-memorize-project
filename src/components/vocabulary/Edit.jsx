@@ -14,8 +14,13 @@ const Edit = ({ id, tags }) => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.login.info.token);
   const editWord = useSelector((state) => state.voc.editWord.info);
-  const vocTags = useSelector((state) => state.voc.editWord.tags);
-  const tagsArray = useSelector((state) => state.voc.editWord.tags);
+  //selectedTagsArray內有好幾筆單字資訊(含eng，tags)，元素類型為物件
+  const selectedTagsArray = useSelector((state) => state.voc.editWord.tags);
+  const selectedObj = selectedTagsArray.find(
+    (data) => data.eng === editWord.english
+  );
+  const tagsError = useSelector((state) => state.ui.error.tagsError);
+  const defiError = useSelector((state) => state.ui.error.defiError);
 
   function goBack() {
     dispatch(uiActions.resetCardMode());
@@ -30,21 +35,58 @@ const Edit = ({ id, tags }) => {
     e.preventDefault();
     let finalEditWord = [];
 
+    //字數限制
+    if (editWord.definition.length >= 150) {
+      dispatch(uiActions.showDefiError());
+      setTimeout(() => {
+        dispatch(uiActions.clearDefiError());
+      }, 1500);
+      return;
+    }
+
+    //處理重複標籤
+    if (editWord.tags) {
+      if (selectedObj.tags.includes(editWord.tags)) {
+        dispatch(uiActions.showTagsError());
+        setTimeout(() => {
+          dispatch(uiActions.clearTagsError());
+        }, 1000);
+        return;
+      }
+    }
+
     dispatch(vocActions.storeEdit());
     dispatch(uiActions.resetCardMode());
     navigate(`/profile/${tags}`);
     alert("修改成功");
 
+    // 當次修改沒改到tags
     if (!editWord.tags) {
-      if (tagsArray.includes("__NoTag")) {
+      // 若是第一次新增tags
+      if (selectedObj.tags.includes("__NoTag")) {
         finalEditWord = { ...editWord };
       } else {
-        finalEditWord = { ...editWord, tags: tagsArray };
+        finalEditWord = { ...editWord, tags: selectedObj.tags };
       }
-    } else if (tagsArray.includes("__NoTag")) {
+    } else if (selectedObj.tags.includes("__NoTag")) {
+      //如果有新增tags且是第一次新增tags
       finalEditWord = { ...editWord, tags: [editWord.tags] };
+      dispatch(
+        vocActions.addTags({ eng: editWord.english, tagsInput: editWord.tags })
+      );
+
+      dispatch(vocActions.removeFromBox(id));
+      navigate(`/profile`);
     } else {
-      finalEditWord = { ...editWord, tags: [...tagsArray, editWord.tags] };
+      // 如果有新增tasg且不是第一次新增
+      dispatch(
+        vocActions.addTags({ eng: editWord.english, tagsInput: editWord.tags })
+      );
+
+      finalEditWord = {
+        ...editWord,
+        tags: [...selectedObj.tags, editWord.tags],
+      };
     }
 
     try {
@@ -91,13 +133,16 @@ const Edit = ({ id, tags }) => {
           <Form.Label>
             <h3>Definition</h3>
           </Form.Label>
+          {defiError && <span>定義超過最大長度限制</span>}
           <Form.Control
             as="textarea"
             rows={3}
+            maxLength={150}
             value={editWord.definition}
             onChange={(e) => {
               editHandler(e, "definition");
             }}
+            style={{ outline: defiError ? "3px solid red" : null }}
           />
         </Form.Group>
 
@@ -127,6 +172,8 @@ const Edit = ({ id, tags }) => {
           />
         </Form.Group>
 
+        {tagsError && <p style={{ color: "red" }}>請勿輸入空白或重複標籤</p>}
+
         <div className={classes.btnContainer}>
           <Button variant="primary" type="submit" className={classes.Btn}>
             提交修改
@@ -135,11 +182,11 @@ const Edit = ({ id, tags }) => {
           <Button onClick={goBack}>返回上一頁</Button>
         </div>
 
-        {vocTags[0] !== "__NoTag" && (
+        {selectedObj.tags[0] !== "__NoTag" && (
           <div className={classes.tagsContainer}>
             <hr />
             <div className={classes.vocTags}>
-              {vocTags.map((tagName, index) => (
+              {selectedObj.tags.map((tagName, index) => (
                 <span key={index}>{tagName}</span>
               ))}
             </div>

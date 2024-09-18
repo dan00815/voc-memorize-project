@@ -40,9 +40,9 @@ const Register = () => {
         dispatch(hintActions.recoverClickable());
       }, 1500);
 
+      // 註冊成功跳轉至login頁面
       navigate("/login");
     } catch (error) {
-      console.log(error);
       const errorMsg = error.response.data.message;
       dispatch(uiActions.clearSpinner());
       dispatch(loginActions.updateRegisterError(errorMsg));

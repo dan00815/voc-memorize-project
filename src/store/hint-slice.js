@@ -39,7 +39,6 @@ const hintSlice = createSlice({
       state.isClickable = true;
     },
 
-    //觸發一條的storeError，1秒後由clear清掉
     recoverStore(state, action) {
       state.hintState.storeError = action.payload;
     },

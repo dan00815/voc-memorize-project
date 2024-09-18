@@ -41,3 +41,15 @@
     transform: translateY(-80px);
   }
 }
+
+@media screen and (max-width: 1024px) {
+  .cardStack {
+    width: 45%;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .cardStack {
+    width: 120%;
+  }
+}

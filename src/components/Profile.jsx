@@ -4,7 +4,7 @@ import ProfileInfo from "./ProfileInfo";
 import CardStack from "./vocabulary/CardStack";
 import Notification from "./UI/Notification";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchVocData, vocActions } from "../store/voc-slice";
+import { fetchVocData } from "../store/voc-slice";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { loginActions } from "../store/login-slice";

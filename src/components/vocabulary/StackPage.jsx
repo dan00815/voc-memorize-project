@@ -9,7 +9,7 @@ import Form from "react-bootstrap/Form";
 import Card from "../Card";
 import Notification from "../UI/Notification";
 
-//有一個funciton判斷現在的media，符合回傳true
+//判斷現在的media query，改變不同裝置profile呈現的單字數量
 function checkMedia() {
   const media = window.matchMedia(
     "(min-width: 768px) and (max-width: 1024px)"
@@ -68,7 +68,6 @@ const StackPage = ({ tags }) => {
 
   useEffect(() => {
     if (selectedCardStack.vocabularies.length === 0) {
-      // 3秒後返回profile
       setTimeout(() => {
         navigate("/profile");
       }, 3000);
@@ -101,11 +100,9 @@ const StackPage = ({ tags }) => {
 
   return (
     <>
-      {/* 介面 */}
       <div className={classes.stackPageInfo}>
         <h1>{tags}</h1>
 
-        {/* card mode button */}
         <div className={classes.mode}>
           <h2>Card Mode</h2>
           <Form className={classes.form}>
@@ -118,7 +115,7 @@ const StackPage = ({ tags }) => {
         </div>
       </div>
 
-      {/* 非卡片模式單字卡 */}
+      {/* 非卡片模式的profile頁面 */}
       {!cardMode && (
         <span>
           <ul className={classes.cardContainer}>
@@ -137,7 +134,6 @@ const StackPage = ({ tags }) => {
             })}
           </ul>
 
-          {/* 分頁器 */}
           <Pagination className="justify-content-center">
             {totalPage > 1 &&
               [...Array(totalPage)].map((_, index) => {
@@ -159,8 +155,8 @@ const StackPage = ({ tags }) => {
 
       {cardMode && <Card tags={tags} />}
 
-      <Stack gap={2} className="col-md-1 mx-auto my-4">
-        <Button variant="info" onClick={goBack}>
+      <Stack gap={3} className="col-md-2 mx-auto">
+        <Button variant="info" onClick={goBack} className="">
           返回上一頁
         </Button>
       </Stack>

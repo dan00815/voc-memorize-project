@@ -30,7 +30,6 @@ const Login = () => {
     const fdObj = new FormData(e.target);
     const data = Object.fromEntries(fdObj.entries());
 
-    //登入時等待的過場
     dispatch(uiActions.spinner());
 
     try {
@@ -39,14 +38,13 @@ const Login = () => {
       //資料放進reudx方便其他組件使用
       dispatch(
         loginActions.updateLoginState({
-          isLogin: res.data.isAuthenticated, //true
+          isLogin: res.data.isAuthenticated,
           name: res.data.name,
           token: res.data.token,
         })
       );
 
       dispatch(uiActions.clearSpinner());
-
       dispatch(hintActions.changeToBox());
       navigate("/profile");
     } catch (error) {

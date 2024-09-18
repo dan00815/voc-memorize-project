@@ -49,7 +49,6 @@ const homeVocSlice = createSlice({
       );
     },
 
-    // 發API失敗，errorhandle
     cancelStore(state, action) {
       const selectedWord = action.payload;
       state.vocData.splice(state.storeIndex, 0, selectedWord);

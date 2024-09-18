@@ -49,15 +49,15 @@
       }
 
       .detailMsg {
-        padding: 20px 5px;
+        padding: 0px 5px;
+        margin: 0 0 50px 15px;
         width: 80%;
-        height: 70%;
-        margin-bottom: 50px;
         overflow: auto;
         p {
-          font-size: 1.2rem;
-          padding-top: 5px;
-          margin-left: 12px;
+          font-size: 1.05rem;
+          height: 100%;
+          margin: auto 0;
+          line-height: 25px;
         }
       }
 

@@ -37,14 +37,12 @@ const Navigation = () => {
   }
 
   async function logout() {
-    //這裡也要將字典關掉
+    //字典重置
     dispatch(dictiActions.resetDictionary());
-    //isLogin改成登出
     dispatch(loginActions.logout());
     //重置卡片模式
     dispatch(uiActions.resetCardMode());
-
-    //把BOX的卡片都先清掉，才不會登入不同帳號時，還看的到前一個帳號的資料
+    //卡片模式復原
     dispatch(vocActions.logout());
 
     alert("您已經登出");
@@ -68,7 +66,6 @@ const Navigation = () => {
             </Link>
           </Navbar.Brand>
 
-          {/* 漢堡選單 */}
           <Navbar.Toggle
             aria-controls="basic-navbar-nav"
             className={classes.hamburgerSvg}

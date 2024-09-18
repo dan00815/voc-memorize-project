@@ -26,7 +26,6 @@ const Audio = ({ word }) => {
       audioRef.current.src = audioFile;
       audioRef.current.play();
     } catch (error) {
-      //代碼404代表找不到音訊，做這個dispatch
       if (error.response.data.statusCode === 404) {
         dispatch(uiActions.showAudioError(error.response.data.message));
         setTimeout(() => {

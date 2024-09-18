@@ -20,7 +20,6 @@ const VocabulartItem = ({
   example,
   index,
   id,
-  tags,
 }) => {
   const dialogRef = useRef();
   const dispatch = useDispatch();
@@ -57,9 +56,8 @@ const VocabulartItem = ({
       dispatch(homeVocActions.remember(english));
       showHint();
     } else {
-      // 在BOX
+      // profile內按got it
       dispatch(vocActions.removeFromBox(id));
-
       showHint();
 
       try {
@@ -99,7 +97,6 @@ const VocabulartItem = ({
     else {
       dispatch(homeVocActions.store(english));
       dispatch(homeVocActions.updateStoreIndex(english));
-
       showHint();
 
       try {
@@ -111,7 +108,7 @@ const VocabulartItem = ({
           }
         );
 
-        // 利用這個來更新profile BOX
+        // 連結database更新畫面
         dispatch(fetchVocData());
       } catch (error) {
         console.log(error);
@@ -140,7 +137,7 @@ const VocabulartItem = ({
         })
       );
     } else {
-      // 在BOX中打開，用id找到選取的單字，放進selectedWord
+      // profile頁面的openDetail做特殊處理
       const selectedVoc = selectedCardStack.vocabularies.find(
         (word) => word.vocId === id
       );

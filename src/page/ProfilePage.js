@@ -13,7 +13,6 @@ const ProfilePage = () => {
   return (
     <>
       <Dictionary />
-      <hr />
       <Profile />
     </>
   );

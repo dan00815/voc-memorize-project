@@ -18,7 +18,10 @@ const Modal = forwardRef(({ vocData, storeFn, id, index }, ref) => {
   const token = useSelector((state) => state.login.info.token);
   const onHomePage = useSelector((state) => state.hint.onHomePage);
   const tagsInput = useSelector((state) => state.voc.tagsInput);
-  const tags = useSelector((state) => state.voc.editWord.tags);
+  const selectedTagsArray = useSelector((state) => state.voc.editWord.tags);
+  const selectedObj = selectedTagsArray.find(
+    (data) => data.eng === vocData.english
+  );
   const tagsError = useSelector((state) => state.ui.error.tagsError);
   const selectedVoc = useSelector((state) => state.homeVoc.vocData[index]);
 
@@ -40,17 +43,16 @@ const Modal = forwardRef(({ vocData, storeFn, id, index }, ref) => {
   }
 
   async function addTag() {
-    if (tags.includes(tagsInput)) {
+    if (selectedObj.tags.includes(tagsInput)) {
       dispatch(uiActions.showTagsError());
       setTimeout(() => {
         dispatch(uiActions.clearTagsError());
       }, 1000);
     } else {
       dispatch(vocActions.updateTagsInput(""));
+      dispatch(vocActions.addTags({ eng: vocData.english, tagsInput }));
 
-      // 假如是在NoTag中
-      if (tags[0] === "__NoTag") {
-        dispatch(vocActions.addTags(tagsInput));
+      if (selectedObj.tags[0] === "__NoTag") {
         setTimeout(() => {
           closeModalHandler();
           dispatch(vocActions.removeFromBox(id));
@@ -64,23 +66,19 @@ const Modal = forwardRef(({ vocData, storeFn, id, index }, ref) => {
               headers: { Authorization: `Bearer ${token}` },
             }
           );
-
           dispatch(fetchVocData());
         } catch (error) {
           console.log(error.message);
         }
       } else {
-        dispatch(vocActions.addTags(tagsInput));
-
         try {
           await axios.patch(
             vocUrl + id,
-            { tags: [...tags, tagsInput] },
+            { tags: [...selectedObj.tags, tagsInput] },
             {
               headers: { Authorization: `Bearer ${token}` },
             }
           );
-
           dispatch(fetchVocData());
         } catch (error) {
           console.log(error.message);
@@ -162,8 +160,11 @@ const Modal = forwardRef(({ vocData, storeFn, id, index }, ref) => {
 
       {!onHomePage && (
         <div className={classes.tags}>
-          {tags[0] !== "__NoTag" &&
-            tags.map((tagName, index) => <span key={index}>{tagName}</span>)}
+          {selectedObj &&
+            selectedObj.tags[0] !== "__NoTag" &&
+            selectedObj.tags.map((tagName, index) => (
+              <span key={index}>{tagName}</span>
+            ))}
         </div>
       )}
     </dialog>,

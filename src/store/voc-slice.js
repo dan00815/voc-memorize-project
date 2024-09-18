@@ -29,7 +29,7 @@ const initialState = {
   vocData: [],
   vocAmount: 0,
   editWord: { info: null, tags: [] },
-  selectedCardStack: [], //渲染指定類別的單字
+  selectedCardStack: [],
   removeIndex: 0,
   tagsInput: "",
 };
@@ -38,6 +38,41 @@ const vocSlice = createSlice({
   name: "voc",
   initialState,
   reducers: {
+    updateTags(state, action) {
+      const keyword = action.payload;
+      function searchTags() {
+        const selectedTags = state.vocData
+          .filter((stack) =>
+            stack.vocabularies.some((voc) => voc.english.includes(keyword))
+          )
+          .map((item) => item.name);
+        state.editWord.tags.push({ eng: keyword, tags: selectedTags });
+      }
+
+      if (state.editWord.tags.length === 0) {
+        searchTags();
+        return;
+      }
+
+      const res = state.editWord.tags.find((data) => data.eng === keyword);
+      if (!res) {
+        searchTags();
+      } else {
+      }
+    },
+
+    addTags(state, action) {
+      const tagName = action.payload.tagsInput;
+      const eng = action.payload.eng;
+
+      const selectedObj = state.editWord.tags.find((data) => data.eng === eng);
+      if (selectedObj.tags[0] === "__NoTag") {
+        selectedObj.tags = [tagName];
+      } else {
+        selectedObj.tags = [...selectedObj.tags, tagName];
+      }
+    },
+
     logout(state) {
       state.status = "idle";
       state.vocData = [];
@@ -78,7 +113,6 @@ const vocSlice = createSlice({
       state.selectedCardStack.splice(state.removeIndex, 0, action.payload);
     },
 
-    // 開modal
     updateDetail(state, action) {
       state.vocDetail.definition = action.payload.definition;
       state.vocDetail.example = action.payload.example;
@@ -94,7 +128,6 @@ const vocSlice = createSlice({
       state.editWord.info = { ...state.editWord.info, ...action.payload };
     },
 
-    // edit立即看到更新後畫面
     storeEdit(state) {
       const editIndex = state.selectedCardStack.vocabularies.findIndex(
         (word) => word.vocId === state.editWord.info.vocId
@@ -108,33 +141,15 @@ const vocSlice = createSlice({
 
     updateSelectedStack(state, action) {
       state.selectedCardStack = action.payload;
+      state.editWord.tags = [];
     },
 
     updateTagsInput(state, action) {
       const inputTags = action.payload.trim();
       state.tagsInput = inputTags;
     },
-
-    updateTags(state, action) {
-      const selectedTags = state.vocData
-        .filter((stack) =>
-          stack.vocabularies.some((voc) => voc.english.includes(action.payload))
-        )
-        .map((item) => item.name);
-
-      state.editWord.tags = selectedTags;
-    },
-
-    // 要直接看到反饋的話，直接把標籤放進editWord的Tags
-    addTags(state, action) {
-      const tagName = action.payload;
-      const includeNoTag = state.editWord.tags.includes("__NoTag");
-
-      if (includeNoTag) {
-        state.editWord.tags = [tagName];
-      } else state.editWord.tags = [...state.editWord.tags, tagName];
-    },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchVocData.pending, (state) => {
@@ -144,7 +159,6 @@ const vocSlice = createSlice({
         state.status = "succeeded";
         state.vocData = action.payload.vocData;
         state.vocAmount = action.payload.vocAmount;
-        console.log("更新成功");
       })
       .addCase(fetchVocData.rejected, (state) => {
         state.status = "failed";

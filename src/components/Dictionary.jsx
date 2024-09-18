@@ -6,7 +6,6 @@ import axios from "axios";
 import Audio from "./UI/Audio";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
-
 import { useSelector, useDispatch } from "react-redux";
 import { fetchVocData } from "../store/voc-slice";
 import { dictiActions } from "../store/dictionary-slice";
@@ -37,12 +36,12 @@ const Dictionary = () => {
 
   async function getDictionaryData(keyword) {
     try {
-      //單字的中文翻譯
+      //中文翻譯
       const translateWord = await axios.get(`${translateUrl}&q=${keyword}`);
       const translateChi =
         translateWord.data.data.translations[0].translatedText;
 
-      //拿定義
+      //定義
       const defineRes = await axios.get(
         `https://api.wordnik.com/v4/word.json/${keyword}/definitions?limit=3&includeRelated=false&sourceDictionaries=all&useCanonical=false&includeTags=false&api_key=${process.env.REACT_APP_WORDNIK_API}`
       );
@@ -56,14 +55,14 @@ const Dictionary = () => {
       const defineChiRes = await axios.get(`${translateUrl}&q=${cleanDefine}`);
       const defineChi = defineChiRes.data.data.translations[0].translatedText;
 
-      //拿句子
+      //句子
       const sentenceRes = await axios.get(
         `https://api.wordnik.com/v4/word.json/${keyword}/topExample?useCanonical=false&api_key=${process.env.REACT_APP_WORDNIK_API}`
       );
       const sentence = sentenceRes.data.text;
       const cleanSentence = checkWord(sentence);
 
-      //拿句子的中文
+      //句子的中文
       const sentenceChiRes = await axios.get(
         `${translateUrl}&q=${cleanSentence}`
       );
@@ -142,7 +141,6 @@ const Dictionary = () => {
           }
         );
 
-        // 利用這個來更新profile BOX
         dispatch(fetchVocData());
       } catch (error) {
         console.log(error.message);

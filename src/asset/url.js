@@ -10,9 +10,17 @@ export const exampleUrl = (eng) => {
   return `https://api.wordnik.com/v4/word.json/${eng}/topExample?useCanonical=false&api_key=${process.env.REACT_APP_WORDNIK_API}`;
 };
 
-export const dailyUrl = "https://voc-backup.onrender.com/daily";
-export const loginUrl = "https://voc-backup.onrender.com/login/";
-export const registerUrl = "https://voc-backup.onrender.com/users/";
+export const dailyUrl =
+  "https://vocab-memorizer-backend.onrender.com/api/v1/public/daily-vocabularies/";
 
-export const vocUrl = "https://voc-backup.onrender.com/vocabularies/";
-export const backendHome = "https://voc-backup.onrender.com/";
+export const loginUrl =
+  "https://vocab-memorizer-backend.onrender.com/api/v1/auth/local/";
+
+export const registerUrl =
+  "https://vocab-memorizer-backend.onrender.com/api/v1/users/";
+
+export const vocUrl =
+  "https://vocab-memorizer-backend.onrender.com/api/v1/vocabularies/";
+
+export const backendHome =
+  "https://vocab-memorizer-backend.onrender.com/api/v1/users/stats/";

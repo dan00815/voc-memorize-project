@@ -3,7 +3,6 @@ import { vocUrl } from "../asset/url";
 import "swiper/css/bundle";
 import classes from "./Card.module.scss";
 import Button from "./UI/Button";
-// import Audio from "./UI/Audio";
 import Notification from "./UI/Notification";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards, Navigation } from "swiper/modules";
@@ -24,7 +23,6 @@ const Card = ({ tags }) => {
 
   useEffect(() => {
     if (selectedCardStack.vocabularies.length === 0) {
-      // 3秒後返回profile
       setTimeout(() => {
         navigate("/profile");
       }, 3000);
@@ -42,7 +40,7 @@ const Card = ({ tags }) => {
     );
   }
 
-  // Card裡面的remember，就不用區分homepage了
+  // Card裡面的remember，不區分homepage
   async function rememberClickHandler(vocData) {
     if (isClickable) return;
     else {
@@ -107,7 +105,10 @@ const Card = ({ tags }) => {
               </header>
 
               <div className={classes.detailMsg}>
-                <p>{voc.definition}</p>
+                <p>
+                  {voc.definition}
+                  {voc.definition}
+                </p>
               </div>
 
               <Button

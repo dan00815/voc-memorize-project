@@ -10,7 +10,6 @@ const Hint = () => {
   let msg = "";
   let icon = faCircleCheck;
 
-  // delete Error暫時未處理
   if (hintState.vocRemove === true) {
     msg = "Good ! Keep Going";
   } else if (hintState.vocStore === true) {
