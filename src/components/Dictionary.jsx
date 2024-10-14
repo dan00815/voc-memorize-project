@@ -37,7 +37,10 @@ const Dictionary = () => {
   async function getDictionaryData(keyword) {
     try {
       //中文翻譯
+      console.log(`${translateUrl}&q=${keyword}`);
       const translateWord = await axios.get(`${translateUrl}&q=${keyword}`);
+      //onsole.log(translateWord);
+
       const translateChi =
         translateWord.data.data.translations[0].translatedText;
 

@@ -96,11 +96,12 @@ const Login = () => {
           <div className={classes.loginBtn}>
             <Button variant="primary" type="submit">
               Submit
+              
             </Button>
 
             <Button
               variant="light"
-              href="https://voc-backup.onrender.com/auth/google"
+              href=" https://vocab-memorizer-backend.onrender.com/api/v1/auth/google"
             >
               <img
                 src="https://img.icons8.com/color/16/000000/google-logo.png"
